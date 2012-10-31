@@ -1,0 +1,257 @@
+/* CSS Document */
+@font-face {
+    font-family: 'Ubuntu';
+    src: local('Ubuntu'),
+        url('../fonts/Ubuntu-Regular.eot#') format('eot'),
+        url('../fonts/Ubuntu-Regular.woff') format('woff'),
+        url('../fonts/Ubuntu-Regular.ttf')  format('truetype'),
+        url('../fonts/Ubuntu_Regular.svg#svgFontName') format('svg');
+}
+/********************** HEADER ****************************/
+body{
+    color: #666;
+    font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+header{
+    background: transparent url(../images/bg_header.jpg) repeat;
+    height: auto;
+}
+/* Logo */
+#logo h3 a{
+    color: #fff;
+    vertical-align:middle;
+}
+#logo h3 a img{
+    padding-right: .4167em;
+}
+/* Mnu_setting */
+#mnu_setting{
+    padding-top: .625em;
+}
+#mnu_setting p{
+    color:#FFF;
+}
+/********************** FIN HEADER ***********************/
+/*********************** LOGIN ****************************/
+#login{
+    float: left;
+    text-align: center;
+}
+#login form{
+    border: 1px solid #ccc;
+    border-radius: .3571em;
+    display: inline-block;
+    margin-bottom: .7143em;
+    overflow: hidden;
+    padding: .625em;
+}
+#login form input:not([type="submit"]), #login form select{
+     background-color: #ededed; 
+}
+#msn{
+    clear: both;
+    font-size: .75em;
+    line-height: 1.17em;
+    margin: 0 auto;
+    text-align: center;
+    width: 50%;
+}
+#msn p{
+    margin: 0;
+}
+/********************FIN LOGIN ****************************/
+/************************ MENU ***************************/
+nav{
+    background: transparent url(../images/bg_mnu.png) repeat-x;
+    height: auto;
+}
+#menu ul.nav-pills{
+    margin: 0;
+    font-size: .875em;
+}
+#menu ul.nav-pills > li{
+    margin-right: .7143em;
+}
+#menu ul.nav-pills > li.active > a{
+    background-color: #666;
+}
+#menu ul.nav-pills > li.active > a:hover{
+    color: #fff;
+}
+#menu .nav-pills > li > a {
+    color: #fff;
+}
+#menu .nav-pills > li > a:hover {
+    color: #005580;
+}
+/*********************FIN MENU ***************************/
+/********************* SUBMENU **************************/
+#submenu{
+    margin-top: .625em;
+}
+.acciones{
+    border:1px #d5d5d5 solid;
+    margin-bottom: .625em;
+    overflow: hidden;
+    text-align: center;
+}
+.acciones span{
+    background-color: #333;
+    border: 1px solid #333;
+    border-radius: .25em;
+    display: block;
+    font-weight:bold;
+    color:#fff;
+    margin: .25em;
+    padding: .3125em;
+    text-align: center;
+}
+.acciones p{
+    margin: .25em;
+    text-align: center;
+}
+.acciones #opciones > a{
+    color: #666;
+    display: inline-block;
+    font-size: .75em;
+    margin-right: .833em;
+    overflow: hidden;
+    cursor: pointer;
+}
+.acciones #opciones a:last-child{
+    margin-right: 0;
+}
+.acciones #opciones > a:hover{
+    color: #000;
+    text-decoration: underline;
+}
+.acciones #opciones > a > img{
+    display: block;
+}
+/******************FIN SUBMENU **************************/
+/************************* MAIN **************************/
+#main{
+    margin-top: .625em;
+}
+#main .thumbnail{
+    text-align:center;    
+}
+#main h3{
+    color: #999;
+    font-weight: bold;
+    text-align: center;
+}
+table.container_grid{
+    border: 1px solid #d5d5d5;
+    margin: .833em 0 0 0;
+    border-collapse:separate;
+    border-spacing: .33em;
+    font-size:  .75em;
+    width: 100%;
+}
+tr.header_grid td{
+    color: #fff;
+    text-align: center;
+    background-color: #2a2a2a;
+    padding:.5em;
+}
+tr.content_grid td{
+    color: #666;
+}
+#gridResult{
+    width: 100%;
+    clear: both;
+}
+/*#divIngresoForm{
+    display: none;
+}*/
+/********************FIN MAIN *****************************/
+/******************** FOOTER ******************************/
+footer{
+    background: transparent url(../images/bg_mnu.png) repeat-x;
+    background-color:#202020;
+    height:auto;
+    margin-top: .625em;
+    padding-top: .625em;
+    text-align:center;
+}
+footer p{
+    color:#FFF;
+    font-size: .75em;
+}
+/*****************FIN FOOTER ******************************/
+/******************** VALIDACION **************************/
+div[id$="Failed"]{
+    float: right;
+    width: 32px;
+    height: 32px;
+}
+.nook{
+    display: inline;
+    background: transparent url(../images/nook.png) no-repeat;
+    margin-left: 10px;
+}
+.ok{
+    display: inline;
+    background: transparent url(../images/ok.png) no-repeat;
+    margin-left: 10px;
+}
+.hidden{
+    display: none;
+}
+.delFoto{
+    cursor: pointer;
+}
+
+/* PAGINACION */
+#pagination-digg li, #pagination li{
+    border:0; margin:0; padding:0;
+    font-size:.6875em;
+    list-style:none;
+    margin-right:.1818em;
+}
+#pagination-digg a, #pagination a{
+    border:solid 1px #c6baa4;
+    margin-right:.1818em;
+}
+#pagination-digg .previous-off, #pagination-digg .next-off, #pagination .previous-off, #pagination .next-off {
+    border:solid 1px #c6baa4;
+    color:#222222;
+    display:block;
+    float:left;
+    font-weight:bold;
+    margin-right:.1818em;
+    padding:.2727em .3636em;
+}
+#pagination-digg .next a, #pagination-digg .previous a, #pagination .next a, #pagination .previous a {
+    font-weight:bold;
+}
+#pagination-digg .active, #pagination .active{
+    background:#c6baa4;
+    color:#FFFFFF;
+    font-weight:bold;
+    display:block;
+    float:left;
+    padding:.3636em .5454em;
+}
+#pagination-digg a:link, #pagination-digg a:visited, #pagination a:link, #pagination a:visited {
+    color:#222222;
+    display:block;
+    float:left;
+    padding:.2727em .5454em;
+    text-decoration:none;
+}
+#pagination-digg a:hover, #pagination a:hover{
+    border:solid 1px #222222
+}
+/*************************** ESTILOS PERSONALIZADOS *******************************/
+.alig_left{
+    text-align: left;
+}
+.alig_right{
+    text-align: right;
+}
+.alig_center{
+    text-align: center;
+}
