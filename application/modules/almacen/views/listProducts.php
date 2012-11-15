@@ -16,9 +16,9 @@
             <tr class="content_grid">
                 <td class="alig_left"><?php echo $row->Producto; ?></td>
                 <td class="alig_left"><?php echo $row->Familia; ?></td>
-                <td class="alig_right"><?php echo $row->PrecioCosto; ?></td>
-                <td class="alig_right"><?php echo $row->PrecioVenta; ?></td>
-                <td class="alig_right"><?php echo $row->PrecioXMayor; ?></td>
+                <td class="alig_right"><?php echo $row->Simbolo . ' ' . $row->PrecioCosto; ?></td>
+                <td class="alig_right"><?php echo $row->Simbolo . ' ' . $row->PrecioVenta; ?></td>
+                <td class="alig_right"><?php echo $row->Simbolo . ' ' . $row->PrecioXMayor; ?></td>
                 <td class="alig_center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No'; echo $activo;?></td>
                 <td class="alig_center"><a href="javascript:void(0);" class="addFoto" data-idproducto="<?php echo $row->ID_PRODUCTO; ?>" title="Agregar Im&aacute;gen"><?php echo img(base_url() . 'images/photos.png'); ?></a></td>
                 <td class="alig_center"><a href="javascript:void(0);" class="editFoto" data-idproducto="<?php echo $row->ID_PRODUCTO; ?>" title="Eliminar Im&aacute;gen"><?php echo img(base_url() . 'images/edit_image.png'); ?></a></td>

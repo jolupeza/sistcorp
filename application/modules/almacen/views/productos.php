@@ -265,7 +265,7 @@
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Editar Producto</h3>                
             </div>
-            <?php echo form_open('almacen/productos/verifyAddProducto', array('name' => 'frmEdit', 'id' => 'frmEdit', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/productos/verifyEditProducto', array('name' => 'frmEdit', 'id' => 'frmEdit', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Producto: *', 'txtProductoEdit', array('class' => 'control-label')); ?>

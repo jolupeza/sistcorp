@@ -44,9 +44,10 @@ class Productos_Model extends CI_Model {
      */
     function getProductosLimit($cuantos, $inicio) {
         $products = array();
-        $this->db->select('ID_PRODUCTO, Producto, f.Familia, PrecioCosto, PrecioVenta, PrecioXMayor, p.Activo, p.ID_EMPRESA');
+        $this->db->select('ID_PRODUCTO, Producto, f.Familia, m.Simbolo, PrecioCosto, PrecioVenta, PrecioXMayor, p.Activo, p.ID_EMPRESA');
         $this->db->from('tbl_producto p');
         $this->db->join('tbl_familiaprod f', 'p.ID_FAMPROD = f.ID_FAMILIAPROD');
+        $this->db->join('tbl_moneda m', 'p.ID_MONEDA = m.ID_MONEDA');
         $where = array('p.ID_EMPRESA' => $this->session->userdata('empresa'));
         $this->db->where($where);
         $this->db->order_by("Producto", "asc");

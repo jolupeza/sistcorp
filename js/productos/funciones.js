@@ -19,10 +19,8 @@ $(document).on("ready", function(){
         $(":hidden[name='idproducto']").val(id);
     });
     
-    $("#modalEditFoto").on("show", function(){
-        $("#modalEditFoto > .modal-body > .alert").remove();
-        $("#panelFoto").empty();
-        var id = $('.editFoto').data('idproducto');        
+    $("#modalEditFoto").on("shown", function(){
+        var id = $(":hidden[name='idproducto']").val();        
         $.post(getBaseURL() + 'almacen/productos/getFotos', {
             'idproducto'       :   id
         }, function(data){
@@ -42,6 +40,8 @@ $(document).on("ready", function(){
     
     $('#modalEditFoto').on('hidden', function () {
         $(":hidden[name='idproducto']").val('');
+        $("#modalEditFoto > .modal-body > .alert").remove();
+        $("#panelFoto").empty();
     });
     
     $(".delFoto").live('click', function(){
@@ -110,12 +110,11 @@ $(document).on("ready", function(){
                         opcion = '<option value="0">Seleccione la clase</option>';
                         $.each(data, function(indice, entrada){
                             opcion += '<option value=" ' + entrada.ID_CLASEPROD + ' ">' + entrada.Clase + '</option>';
-                        });
-                        $(selClases).append($(opcion));            
+                        });    
                     } else {
                         opcion = '<option value="0">No hay clases</option>';
-                        $(selClases).append($(opcion));
                     }
+                    $(selClases).append($(opcion));           
                 }, 'json');
             }
         });
@@ -151,12 +150,11 @@ $(document).on("ready", function(){
                         opcion = '<option value="0">Seleccione la familia</option>';
                         $.each(data, function(indice, entrada){
                             opcion += '<option value=" ' + entrada.ID_FAMILIAPROD + ' ">' + entrada.Familia + '</option>';
-                        });
-                        $(selFamilia).append($(opcion));            
+                        });      
                     } else {
                         opcion = '<option value="0">No hay familias</option>';
-                        $(selFamilia).append($(opcion));
                     }
+                    $(selFamilia).append($(opcion)); 
                 }, 'json');
             }
         });
@@ -210,14 +208,12 @@ $(document).on("ready", function(){
                             se = '';
                         }
                         opcion += '<option value="' + entrada.ID_CLASEPROD + '" ' + se + '>' + entrada.Clase + '</option>';
-                    })
-                    $("#ddlClaseEdit").append($(opcion));                        
-                        
+                    })     
                 } else {
                     $("#ddlClaseEdit").empty();
                     opcion = '<option value="0">No hay clases</option>';
-                    $("#ddlClaseEdit").append($(opcion));
                 }
+                $("#ddlClaseEdit").append($(opcion));  
             }, 'json');
             
             $.post(getBaseURL() + 'almacen/productos/getFamilias', {
@@ -234,15 +230,12 @@ $(document).on("ready", function(){
                         }
                         opcion += '<option value="' + entrada.ID_FAMILIAPROD + '" ' + se + '>' + entrada.Familia + '</option>';
                     })
-                    $("#ddlFamiliaEdit").append($(opcion));                        
-                        
                 } else {
                     $("#ddlFamiliaEdit").empty();
                     opcion = '<option value="0">No hay familias</option>';
-                    $("#ddlFamiliaEdit").append($(opcion));
                 }
-            }, 'json');
-            
+                $("#ddlFamiliaEdit").append($(opcion));
+            }, 'json');            
             $("select[name='ddlUniMedEdit'] option[value=" + data.ID_UNIDMED + "]").prop("selected",true); 
             $("select[name='ddlMarcaEdit'] option[value=" + data.ID_MARCA + "]").prop("selected",true); 
             $(":input[id='txtAbreviatura']").val(data.Abreviatura);
