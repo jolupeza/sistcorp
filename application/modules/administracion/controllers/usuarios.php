@@ -47,7 +47,7 @@ class Usuarios extends MX_Controller {
             }
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('usuarios/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
             $data['subtitle'] = 'Administraci&oacute;n de Usuarios';
@@ -365,7 +365,7 @@ class Usuarios extends MX_Controller {
             }
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('usuarios/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
             $data['subtitle'] = 'Administraci&oacute;n de Usuarios';

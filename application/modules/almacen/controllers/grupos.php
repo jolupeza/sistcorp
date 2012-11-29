@@ -43,7 +43,7 @@ class Grupos extends MX_Controller {
 
         $data['current'] = 'Almacen';
         $data['cssLoad'] = array('jquery.alerts');
-        $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+        $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
         $data['jsPropio'] = array('grupos/funciones');
         $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
         $data['subtitle'] = 'Administraci&oacute;n de Grupos';
@@ -194,6 +194,8 @@ class Grupos extends MX_Controller {
                 } else {
                     $text = strtr(strtoupper($this->input->post('txtNomGrupo')), "àèìòùáéíóúçñäëïöü", "ÀÈÌÒÙÁÉÍÓÚÇÑÄËÏÖÜ");
                 }
+            } else {
+                $text = urldecode($text);
             }
 
             $num_row = $this->Grupos_Model->getNumRows($text);
@@ -209,7 +211,7 @@ class Grupos extends MX_Controller {
 
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('grupos/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
             $data['subtitle'] = 'Administraci&oacute;n de Grupos';

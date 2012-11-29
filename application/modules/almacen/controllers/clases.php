@@ -50,7 +50,7 @@ class Clases extends MX_Controller {
 
             $data['current'] = 'Almacen';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('clases/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute; de Clases';
             $data['subtitle'] = 'Administraci&oacute;n de Clases';
@@ -189,8 +189,9 @@ class Clases extends MX_Controller {
             if (is_null($text)) {
                 if ($this->input->post('txtNomClase') == '') {
                     redirect('almacen/clases');
+                } else {
+                    $text = $this->input->post('txtNomClase');
                 }
-                $text = $this->input->post('txtNomClase');
             } else {
                 $text = urldecode($text);
             }
@@ -214,7 +215,7 @@ class Clases extends MX_Controller {
 
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('clases/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Clases';
             $data['subtitle'] = 'Administraci&oacute;n de Clases';

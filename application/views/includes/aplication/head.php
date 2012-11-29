@@ -14,7 +14,7 @@
             <?php endfor; ?>
         <?php endif; ?>  
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap.min.js"></script>
         <!-- Cargamos el script de jquery.validation -->
         <?php if (isset($validar) && $validar) : ?>

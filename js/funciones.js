@@ -48,18 +48,17 @@ $(document).on("ready", function(){
     }, function(){
         $('.opciones').fadeIn('slow');
     });
-  
+  /*
     $('#cargando img').ajaxStart(function(){
         $(this).show();
     }).ajaxStop(function(){
         $(this).hide();
     });
-   
+   */
 });
 
 // Función para enviar submit a través de input tipo button
 function submit(form){
-    alert('enviado');
     form.submit();
 }
 

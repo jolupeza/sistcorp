@@ -63,7 +63,7 @@ class Productos extends CI_Controller {
             }
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('productos/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Productoss';
             $data['subtitle'] = 'Administraci&oacute;n de Productos';

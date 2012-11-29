@@ -38,7 +38,7 @@ class Familias extends CI_Controller {
 
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('familias/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Familias';
             $data['subtitle'] = 'Administraci&oacute;n de Familias';

@@ -23,7 +23,6 @@ class Dashboard extends CI_Controller {
         $data['modulos'] = $mod;
       }
       $data['active'] = 'Dashboard';
-      $data['jsLoad'] = array('bootstrap-tab');
       $data['title'] = 'SISTCORP - Dashboard';
       $data['main_content'] = 'dashboard/index';
       $this->load->view('includes/aplication/template', $data);

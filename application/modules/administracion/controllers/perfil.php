@@ -41,7 +41,8 @@ class Perfil extends MX_Controller {
 
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            //$data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
             $data['jsPropio'] = array('perfil/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Perfiles';
             $data['subtitle'] = 'Administraci&oacute;n de Perfiles';
@@ -118,7 +119,7 @@ class Perfil extends MX_Controller {
     }
 
     /**
-     * Métofo que permitirá editar el perfil seleccionado
+     * Método que nos devolverá los datos del perfil a editar
      * @access     public
      * @param      integer     $id_perfil  Contiene el id del perfil a editar
      */
@@ -205,8 +206,9 @@ class Perfil extends MX_Controller {
             if (is_null($texto)) {
                 if ($this->input->post('txtNomPerfil') == '') {
                     redirect('administracion/perfil');
+                } else {
+                    $texto = $this->input->post('txtNomPerfil');
                 }
-                $texto = $this->input->post('txtNomPerfil');
             } else {
                 $texto = urldecode($texto);
             }
@@ -223,7 +225,7 @@ class Perfil extends MX_Controller {
             }
             $data['current'] = 'Administración';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
+            $data['jsLoad'] = array('funciones',  'validate', 'jquery.alerts');
             $data['jsPropio'] = array('perfil/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Perfiles';
             $data['subtitle'] = 'Administraci&oacute;n de Perfiles';

@@ -170,7 +170,6 @@ class Familias_Model extends CI_Model {
         $this->db->order_by("ID_FAMILIAPROD", "asc");
         $this->db->limit($cuantos, $inicio);
         $result = $this->db->get();
-        var_dump($this->db->last_query());
         if ($result->num_rows() <= 0) {
             return FALSE;
         }
