@@ -1,6 +1,6 @@
 $(document).on("ready", function(){
     // Script para mostrar el formulario para agregar imágenes a los productos
-    $(".addFoto").live("click", function(event){
+    $(".addFoto").on("click", function(event){
         event.preventDefault();
         var id = $(this).data('idproducto');        
         $("#modalFoto").modal();
@@ -12,7 +12,7 @@ $(document).on("ready", function(){
     });
     
     // Script para mostrar el formulario para agregar imágenes a los productos
-    $(".editFoto").live("click", function(event){
+    $(".editFoto").on("click", function(event){
         event.preventDefault();
         var id = $(this).data('idproducto');        
         $("#modalEditFoto").modal();
@@ -44,7 +44,7 @@ $(document).on("ready", function(){
         $("#panelFoto").empty();
     });
     
-    $(".delFoto").live('click', function(){
+    $(".delFoto").on('click', function(){
         var id = $(this).data('idfoto');
         $.post(getBaseURL() + 'almacen/productos/delFoto', {
             'idfoto'       :   id
@@ -184,7 +184,7 @@ $(document).on("ready", function(){
   
     // Script para editar los datos de una familia específica
     var $main = $('#main');
-    $('.editProducto', $main).live("click", function(e){
+    $('.editProducto', $main).on("click", function(e){
         e.preventDefault();
         var id = $(this).data('idproducto');
         $.post('/SISTCORP/almacen/productos/editProducto', {
@@ -253,7 +253,7 @@ $(document).on("ready", function(){
   
     // Permitir la paginación ajax en condeigniter        
     $("#gridResult").load("productos/listProducts");
-    $("#pagination-digg li a").live("click",function(e) {
+    $("#pagination-digg li a").on("click",function(e) {
         e.preventDefault();
         var href = $(this).attr("href");
         $("#gridResult").load(href);

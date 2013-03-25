@@ -6,7 +6,7 @@
             <h3>SISTEMA ADMINISTRATIVO - LOGIN</h3>
             <?php
             $attributes = array('name' => 'frmLogin', 'id' => 'frmLogin', 'class' => 'form-horizontal');
-            echo form_open('login/VerifyLogin', $attributes);
+            echo form_open(base_url() . 'login/verifyLogin', $attributes);
             ?>
             <div class="control-group">
                 <?php

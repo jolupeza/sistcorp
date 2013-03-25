@@ -22,6 +22,7 @@ class Dashboard extends CI_Controller {
       if (is_array($mod)) {
         $data['modulos'] = $mod;
       }
+      $this->load->helper(array('funciones_helper'));
       $data['active'] = 'Dashboard';
       $data['title'] = 'SISTCORP - Dashboard';
       $data['main_content'] = 'dashboard/index';

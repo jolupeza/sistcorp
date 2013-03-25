@@ -80,7 +80,7 @@ $(document).on("ready", function(){
         
     // Script para editar los datos de una familia específica
     var $main = $("#main");
-    $('.editFamilia', $main).live("click", function(e){
+    $('.editFamilia', $main).on("click", function(e){
         e.preventDefault();
         var id = $(this).data('idfamilia');
         $.post('/SISTCORP/almacen/familias/editFamilia', {
@@ -117,7 +117,7 @@ $(document).on("ready", function(){
   
     // Permitir la paginación ajax en condeigniter        
     $("#gridResult").load("familias/listFamilia");
-    $("#pagination-digg li a").live("click",function(e) {
+    $("#pagination-digg li a").on("click",function(e) {
         e.preventDefault();
         var href = $(this).attr("href");
         $("#gridResult").load(href);

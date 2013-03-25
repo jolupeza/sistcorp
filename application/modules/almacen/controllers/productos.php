@@ -61,10 +61,10 @@ class Productos extends CI_Controller {
             if (is_array($marcas)) {
                 $data['marcas'] = $marcas;
             }
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('productos/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'productos/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Productoss';
             $data['subtitle'] = 'Administraci&oacute;n de Productos';
             $data['main_content'] = 'productos';

@@ -5,11 +5,13 @@
  * Descripción  : Modelo que trabajará con la tabla tbl_usuario para verificar el login del usuario.
  * @author Ing. José Pérez
  */
-class Login_Model extends CI_Model {
+class Login_Model extends CI_Model 
+{
 
     private $_table;
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->_table = 'tbl_usuario';
     }
@@ -21,7 +23,8 @@ class Login_Model extends CI_Model {
      * @param string $data['PWD_JS']  El password encriptado con función js sha1
      * @return array
      */
-    function login($data) {
+    function login($data) 
+    {
         $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, PWD, Activo, ID_EMPRESA, ID_PERFIL');
         $this->db->limit(1);
         $query = $this->db->get_where($this->_table, array('Usuario' => $data['Usuario'], 'PWD' => $data['PWD'], 'PWD_JS' => $data['PWD_JS'], 'ID_EMPRESA' => $data['ID_EMPRESA'], 'Activo' => '1'));
@@ -37,7 +40,8 @@ class Login_Model extends CI_Model {
      * @param       Int             $id
      * @return      Boolean     
      */
-    function updateStatus($code, $id) {
+    function updateStatus($code, $id) 
+    {
         $this->db->where(array('ID_USUARIO' => $id, 'Code' => $code));
         $result = $this->db->get($this->_table);
         if ($result->num_rows() > 0) {

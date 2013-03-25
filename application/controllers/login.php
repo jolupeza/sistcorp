@@ -1,16 +1,15 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : controllers/login.php
  * Descripción  : Controlador que se encargará de realizar la verificación del logueo del usuario y de cerrar la sesión.
  * @author Ing. José Pérez
  */
-class Login extends CI_Controller {
+class Login extends CI_Controller 
+{
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->load->helper('form');
         $this->load->model('Login_Model');
@@ -21,7 +20,8 @@ class Login extends CI_Controller {
      * usuarios
      * @access     public
      */
-    function index() {
+    function index() 
+    {
         if (!$this->_is_logged_in()) {
             $this->load->model('Empresas_Model');
             $emp = $this->Empresas_Model->getEmpresas();
@@ -29,7 +29,7 @@ class Login extends CI_Controller {
                 $data['empresas'] = $emp;
             }
             $data['validar'] = TRUE;
-            $data['jsPropio'] = array('login/funciones');
+            $data['jsLoad'] = array('login/funciones');
             $data['main_content'] = 'login/index';
             $data['title'] = 'SISTCORP - Login';
             $this->load->view('includes/aplication/template.php', $data);
@@ -40,7 +40,8 @@ class Login extends CI_Controller {
      * Se encargará de recibir los datos del formulario de login
      * @access     public
      */
-    function VerifyLogin() {
+    function verifyLogin() 
+    {
         // Verificamos que ya estemos registrados y accesos indeseados
         if (!$this->_is_logged_in()) {
             $this->load->library('form_validation');
@@ -86,7 +87,8 @@ class Login extends CI_Controller {
      * @param      int          $value      El valor de empresa seleccionada
      * @return      bool       
      */
-    function _verifySelect($value) {
+    function _verifySelect($value) 
+    {
         if (!isset($value) or $value == '') {
             return FALSE;
         }
@@ -98,7 +100,8 @@ class Login extends CI_Controller {
      * @access     public
      * @param      String      Código de activación
      */
-    function register_confirm($code = NULL, $id = NULL) {
+    function register_confirm($code = NULL, $id = NULL) 
+    {
         if ($this->_is_logged_in()) {
             $this->session->set_flashdata('mensaje_error', 'Usted se encuentra logueado y no puede activar una cuenta.');
             redirect('dashboard');
@@ -116,7 +119,8 @@ class Login extends CI_Controller {
         }
     }
 
-    function _verifyAcount($veri = FALSE) {
+    function _verifyAcount($veri = FALSE) 
+    {
         $data['title'] = 'SISTCORP - Verificaci&oacute;n de cuenta';
         $data['subtitle'] = 'Activaci&oacute;n de cuenta';
         $data['main_content'] = ($veri) ? 'login/verifyOk' : 'login/verifyNoOk';
@@ -127,7 +131,8 @@ class Login extends CI_Controller {
      * Se encargará cerrar la sesión del usuario
      * @access     public
      */
-    function logout() {
+    function logout() 
+    {
         if ($this->session->userdata('logged_in')) {
             $this->session->sess_destroy();
         }
@@ -139,7 +144,8 @@ class Login extends CI_Controller {
      * @access     private
      * @return     boolean     Si no estamos logueados devolverá FALSE
      */
-    function _is_logged_in() {
+    function _is_logged_in() 
+    {
         $is_logged_in = $this->session->userdata('logged_in');
         if (!isset($is_logged_in) || $is_logged_in == FALSE) {
             return FALSE;

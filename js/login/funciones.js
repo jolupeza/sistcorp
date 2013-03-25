@@ -10,13 +10,6 @@ $(document).on("ready", function(){
                 minlength: 6
             }
         },
-        messages: {
-            empresa: "Debe seleccionar la empresa.",
-            username: "Debe ingresar su nombre de usuario.",
-            pass: {
-                required: "Debe ingresar su password.",
-                minlength: "Por favor, introduzca al menos 6 caracteres."
-            }
-        }
+        errorClass: "text-error"
     });
 });

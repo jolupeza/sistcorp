@@ -17,7 +17,8 @@
                         <a class="btn" href="" title="Mi cuenta">Mi cuenta</a>
                         <a class="btn" href="" title="Configuraci&oacute;n">Configuraci&oacute;n</a>
                         <?php echo anchor(site_url('login/logout'), 'Cerrar sesi&oacute;n', 'title="Cerrar sesi&oacute;n" class="btn"'); ?>
-                    </div>               
+                    </div>    
+                    <p class="text-right"><?php echo format_date(); ?></p>
             </div>
             <!-- Fin #mnu_setting -->
              <?php endif; ?>

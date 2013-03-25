@@ -35,11 +35,10 @@ class Familias extends CI_Controller {
             if (is_array($grupos)) {
                 $data['grupos'] = $grupos;
             }
-
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('familias/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'familias/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Familias';
             $data['subtitle'] = 'Administraci&oacute;n de Familias';
             $data['main_content'] = 'familias';

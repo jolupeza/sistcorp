@@ -40,11 +40,10 @@ class Grupos extends MX_Controller {
             $data['grupos'] = $this->Grupos_Model->getGrupoLimit($config['per_page'], $this->uri->segment(4));
             $data['pag_links'] = $this->pagination->create_links();
         }
-
+        $this->load->helper(array('funciones_helper'));
         $data['current'] = 'Almacen';
         $data['cssLoad'] = array('jquery.alerts');
-        $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-        $data['jsPropio'] = array('grupos/funciones');
+        $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'grupos/funciones');
         $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
         $data['subtitle'] = 'Administraci&oacute;n de Grupos';
         $data['main_content'] = 'grupos';
@@ -208,11 +207,10 @@ class Grupos extends MX_Controller {
                 $data['grupos'] = $this->Grupos_Model->getSearchGrupo($text, $config['per_page'], $this->uri->segment(5));
                 $data['pag_links'] = $this->pagination->create_links();
             }
-
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('grupos/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'grupos/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
             $data['subtitle'] = 'Administraci&oacute;n de Grupos';
             $data['main_content'] = 'grupos';

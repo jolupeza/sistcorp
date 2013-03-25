@@ -45,10 +45,10 @@ class Usuarios extends MX_Controller {
             if (is_array($perfiles)) {
                 $data['perfiles'] = $perfiles;
             }
+            $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('usuarios/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'usuarios/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
             $data['subtitle'] = 'Administraci&oacute;n de Usuarios';
             $data['main_content'] = 'usuarios';
@@ -363,10 +363,10 @@ class Usuarios extends MX_Controller {
             if (is_array($perfiles)) {
                 $data['perfiles'] = $perfiles;
             }
+            $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('usuarios/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'usuarios/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
             $data['subtitle'] = 'Administraci&oacute;n de Usuarios';
             $data['main_content'] = 'usuarios';

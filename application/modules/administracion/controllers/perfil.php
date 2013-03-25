@@ -38,12 +38,10 @@ class Perfil extends MX_Controller {
                 $data['perfil'] = $this->Perfil_Model->getPerfilLimit($config['per_page'], $this->uri->segment(4));
                 $data['pag_links'] = $this->pagination->create_links();
             }
-
+            $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
-            //$data['jsLoad'] = array('funciones', 'bootstrap-tab', 'bootstrap-modal', 'validate', 'jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('perfil/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'perfil/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Perfiles';
             $data['subtitle'] = 'Administraci&oacute;n de Perfiles';
             $data['main_content'] = 'perfil';
@@ -223,6 +221,7 @@ class Perfil extends MX_Controller {
                 $data['perfil'] = $this->Perfil_Model->getSearchPerfil($texto, $config['per_page'], $this->uri->segment(5));
                 $data['pag_links'] = $this->pagination->create_links();
             }
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Administración';
             $data['cssLoad'] = array('jquery.alerts');
             $data['jsLoad'] = array('funciones',  'validate', 'jquery.alerts');

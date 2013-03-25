@@ -47,11 +47,10 @@ class Clases extends MX_Controller {
             if (is_array($grupos)) {
                 $data['grupos'] = $grupos;
             }
-
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Almacen';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('clases/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'clases/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute; de Clases';
             $data['subtitle'] = 'Administraci&oacute;n de Clases';
             $data['main_content'] = 'clases';
@@ -212,11 +211,10 @@ class Clases extends MX_Controller {
             if (is_array($grupos)) {
                 $data['grupos'] = $grupos;
             }
-
+            $this->load->helper(array('funciones_helper'));
             $data['current'] = 'Almacén';
             $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('clases/funciones');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'clases/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Clases';
             $data['subtitle'] = 'Administraci&oacute;n de Clases';
             $data['main_content'] = 'clases';
