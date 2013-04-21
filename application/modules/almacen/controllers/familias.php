@@ -1,7 +1,4 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : controllers/almacen/familias.php
@@ -9,9 +6,11 @@ if (!defined('BASEPATH'))
  *                referente a las familias de los productos
  * @author Ing. José Pérez
  */
-class Familias extends CI_Controller {
+class Familias extends MX_Controller 
+{
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->load->helper('form');
         $this->load->library('form_validation');
@@ -23,7 +22,8 @@ class Familias extends CI_Controller {
      * Se encargará de cargar la vista principal para el control de familias
      * @access     public
      */
-    function index() {
+    function index() 
+    {
         if ($this->_is_logged_in()) {
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
@@ -31,12 +31,13 @@ class Familias extends CI_Controller {
             }
 
             $this->load->model('Grupos_Model');
-            $grupos = $this->Grupos_Model->getGrupos();
+            $grupos = $this->Grupos_Model->getGruposTotal();
             if (is_array($grupos)) {
                 $data['grupos'] = $grupos;
             }
+            
             $this->load->helper(array('funciones_helper'));
-            $data['current'] = 'Almacén';
+            $data['current'] = 'Almacen';
             $data['cssLoad'] = array('jquery.alerts');
             $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'familias/funciones');
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Familias';
@@ -46,25 +47,38 @@ class Familias extends CI_Controller {
         }
     }
 
-    function listFamilia($offset = '') {
+    function listFamilia($query_id = 0, $offset = '') 
+    {
         $limit = '15';
-        $total = $this->Familias_Model->getNumRows();
-        if (is_numeric($total) AND $total > 0) {
-            $data['familias'] = $this->Familias_Model->getFamiliasLimit($limit, $offset);
-            $config['base_url'] = base_url() . 'almacen/familias/listFamilia';
-            $config['total_rows'] = $total;
+        $query_array = array();
+        if ($query_id > 0) {
+            $this->input->load_query($query_id);
+            $query_array = array(
+                'Familia' => $this->input->get('Familia')
+            );
+        }
+        
+        $results = $this->Familias_Model->getFamilias($query_array, $limit, $offset);
+        $data['familias'] = $results['rows'];
+        $data['query_id'] = $query_id;
+        $data['num_rows'] = $results['num_rows'];
+        
+        if (is_numeric($results['num_rows']) AND $results['num_rows'] > 0) {
+            $config['base_url'] = base_url() . 'almacen/familias/listFamilia/' . $query_id;
+            $config['total_rows'] = $results['num_rows'];
             $config['per_page'] = $limit;
-            $config['uri_segment'] = '4';
+            $config['uri_segment'] = '5';
             $this->pagination->initialize($config);
             $data['pag_links'] = $this->pagination->create_links();
-            $this->load->view('almacen/listFamilia', $data);
         }
+        $this->load->view('almacen/listFamilia', $data);
     }
 
     /**
      * Función para validar a través de Ajax
      */
-    function validateFamiliaAjax() {
+    function validateFamiliaAjax() 
+    {
         $this->load->library('validator');
         $response =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
@@ -87,7 +101,8 @@ class Familias extends CI_Controller {
      *  Método que via ajax nos envía las clases de acuerdo al grupo seleccionado
      * @access      public 
      */
-    function getClases() {
+    function getClases() 
+    {
         $id = $this->input->post('grupoId');
         $this->load->model('Clases_Model');
         $clases = $this->Clases_Model->getClasesByGrupo($id);
@@ -101,7 +116,8 @@ class Familias extends CI_Controller {
      * y de estar todo correcto agregará la nueva familia de productos.
      * @access     public
      */
-    function verifyAddFamilia() {
+    function verifyAddFamilia() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtFamilia', 'Familia', 'trim|required');
             $this->form_validation->set_rules('ddlGrupo', 'Grupo', 'callback__verifySelect');
@@ -138,7 +154,8 @@ class Familias extends CI_Controller {
      * @param type $clase   Clase seleccionado
      * @return boolean 
      */
-    function _verifySelect($value) {
+    function _verifySelect($value) 
+    {
         if ($value == '0') {
             return FALSE;
         } else {
@@ -150,7 +167,8 @@ class Familias extends CI_Controller {
      * Método que permitirá traer los datos de la familia a editar
      * @access     public
      */
-    function editFamilia() {
+    function getFamilia() 
+    {
         if ($this->_is_logged_in()) {
             $id = $this->input->post('idFamilia');
             $result = $this->Familias_Model->getFamiliaByID($id);
@@ -164,7 +182,8 @@ class Familias extends CI_Controller {
      * Se encargará de actualizar los datos editados de la familia seleccionada
      * @access     public
      */
-    function verifyEditFamilia() {
+    function verifyEditFamilia() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtFamiliaEdit', 'Familia', 'trim|required');
             $this->form_validation->set_rules('ddlClaseEdit', 'Clase', 'callback__verifySelect');
@@ -195,21 +214,21 @@ class Familias extends CI_Controller {
     }
 
     /**
-     * Función que permitirá buscar un determinado perfil
+     * Función que permitirá buscar una determinada familia
      * @access     public
      */
-    function searchFamilia($search) {
-        $limit = '15';
-        $total = $this->Familias_Model->getNumRows(urldecode($search));
-        if (is_numeric($total) AND $total > 0) {
-            $config['base_url'] = base_url() . 'almacen/familias/searchFamilia/' . $search;
-            $config['total_rows'] = $total;
-            $config['per_page'] = $limit;
-            $config['uri_segment'] = '5';
-            $this->pagination->initialize($config);
-            $data['familias'] = $this->Familias_Model->searchFamilia(urldecode($search), $limit, $this->uri->segment(5));
-            $data['pag_links'] = $this->pagination->create_links();
-            $this->load->view('almacen/listFamilia', $data);
+    function searchFamilia() 
+    {
+        if ($this->_is_logged_in()) {
+            if ($this->input->post('txtNomFamilia') != '') {
+                $query_array = array(
+                    'Familia' => $this->input->post('txtNomFamilia')
+                );
+                $query_id = $this->input->save_query($query_array);
+                echo $query_id;
+            } else {
+                echo '';
+            }
         }
     }
 

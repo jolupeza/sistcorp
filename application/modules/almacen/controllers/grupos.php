@@ -1,14 +1,12 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : almacen/controllers/grupos.php
  * Descripción  : Controlador que se encargará de la lógica del negocio referente a los grupos de productos.
  * @author Ing. José Pérez
  */
-class Grupos extends MX_Controller {
+class Grupos extends MX_Controller 
+{
 
     function __construct() {
         parent::__construct();
@@ -22,38 +20,54 @@ class Grupos extends MX_Controller {
      * Se encargará de cargar la vista principal para el control de grupos
      * @access     public
      */
-    function index() {
+    function index($query_id = 0) 
+    {
         if ($this->_is_logged_in()) {
+            $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
+            
+            $query_array = array();
+            if ($query_id > 0) {
+                $this->input->load_query($query_id);
+                $query_array = array(
+                    'Grupo' => $this->input->get('Grupo')
+                );
+            }
+
+            $results = $this->Grupos_Model->getGrupos($query_array, $limit, $this->uri->segment(5));
+            $data['grupos'] = $results['rows'];
+            $data['query_id'] = $query_id;
+            $data['num_rows'] = $results['num_rows'];
+
+            // Obtenemos el número total de registros de la tabla tbl_grupoprod
+            if (is_numeric($results['num_rows']) AND $results['num_rows'] > 0) {
+                $config['base_url'] = base_url() . 'almacen/grupos/index/' . $query_id;
+                $config['total_rows'] = $results['num_rows'];
+                $config['per_page'] = '10';
+                $config['uri_segment'] = '5';
+                $this->pagination->initialize($config);
+                $data['pag_links'] = $this->pagination->create_links();
+            }
+
+            $this->load->helper(array('funciones_helper'));
+            $data['current'] = 'Almacen';
+            $data['cssLoad'] = array('jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'grupos/funciones');
+            $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
+            $data['subtitle'] = 'Administraci&oacute;n de Grupos';
+            $data['main_content'] = 'grupos';
+            $this->load->view('includes/aplication/template', $data);
         }
-        // Obtenemos el número total de registros de la tabla tbl_grupoprod
-        $num_rows = $this->Grupos_Model->getNumRows();
-        if (is_numeric($num_rows) AND $num_rows > 0) {
-            $config['base_url'] = base_url() . 'almacen/grupos/index';
-            $config['total_rows'] = $num_rows;
-            $config['per_page'] = '10';
-            $config['uri_segment'] = '4';
-            $this->pagination->initialize($config);
-            $data['grupos'] = $this->Grupos_Model->getGrupoLimit($config['per_page'], $this->uri->segment(4));
-            $data['pag_links'] = $this->pagination->create_links();
-        }
-        $this->load->helper(array('funciones_helper'));
-        $data['current'] = 'Almacen';
-        $data['cssLoad'] = array('jquery.alerts');
-        $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'grupos/funciones');
-        $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
-        $data['subtitle'] = 'Administraci&oacute;n de Grupos';
-        $data['main_content'] = 'grupos';
-        $this->load->view('includes/aplication/template', $data);
     }
 
     /**
      * Función para validar a través de Ajax
      */
-    function validateGrupoAjax() {
+    function validateGrupoAjax() 
+    {
         $this->load->library('validator');
         $response =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
@@ -78,7 +92,8 @@ class Grupos extends MX_Controller {
      * agregará el nuevo grupo a la base de datos.
      * @access     public
      */
-    function verifyAddGrupo() {
+    function verifyAddGrupo() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtGrupo', 'Grupo', 'trim|required|callback__verifyExistGrupo');
             $this->form_validation->set_message('required', 'El campo %s es requerido');
@@ -105,7 +120,13 @@ class Grupos extends MX_Controller {
         }
     }
 
-    function _verifyExistGrupo($grupo) {
+    /**
+     * Verificamos que el grupo a insertar no este registrado
+     * @param str $grupo
+     * @return boolean
+     */
+    function _verifyExistGrupo($grupo) 
+    {
         $result = $this->Grupos_Model->verifyExistGrupo($grupo);
         if ($result) {
             return TRUE;
@@ -119,10 +140,11 @@ class Grupos extends MX_Controller {
      * @access     public
      * @param      integer     $id_perfil  Contiene el id del grupo a editar
      */
-    function editGrupo() {
+    function getGrupo() 
+    {
         if ($this->_is_logged_in()) {
             $id = $this->input->post('idgrupo');
-            $result = $this->Grupos_Model->getGrupoByID($this->input->post('idgrupo'));
+            $result = $this->Grupos_Model->getGrupoByID($id);
             if (is_object($result)) {
                 echo json_encode($result);
             }
@@ -133,7 +155,8 @@ class Grupos extends MX_Controller {
      * Se encargará de actualizar los datos editados del grupo seleccionado
      * @access     public
      */
-    function verifyEditGrupo() {
+    function verifyEditGrupo() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtGrupoEdit', 'Grupo', 'trim|required');
             $this->form_validation->set_message('required', 'El %s es requerido');
@@ -176,45 +199,22 @@ class Grupos extends MX_Controller {
     }
 
     /**
-     * Función que permitirá buscar un determinado perfil
-     * @access     public
+     * Método para buscar un determinado Grupo
+     * @access     public 
      */
-    function searchGrupo($text = NULL) {
-        if ($this->_is_logged_in()) {
-            $this->load->model('Modulos_Model');
-            $mod = $this->Modulos_Model->getModulos();
-            if (is_array($mod)) {
-                $data['modulos'] = $mod;
-            }
+    function searchGrupo() 
+    {
+        if ($this->_is_logged_in()) {     
+            if ($this->input->post('txtNomGrupo') != '') {
+                $query_array = array(
+                    'Grupo' => $this->input->post('txtNomGrupo')
+                );
 
-            if (is_null($text)) {
-                if ($this->input->post('txtNomGrupo') == '') {
-                    redirect('almacen/grupos');
-                } else {
-                    $text = strtr(strtoupper($this->input->post('txtNomGrupo')), "àèìòùáéíóúçñäëïöü", "ÀÈÌÒÙÁÉÍÓÚÇÑÄËÏÖÜ");
-                }
+                $query_id = $this->input->save_query($query_array);
+                redirect('almacen/grupos/index/' . $query_id);
             } else {
-                $text = urldecode($text);
-            }
-
-            $num_row = $this->Grupos_Model->getNumRows($text);
-            if (is_numeric($num_row) AND $num_row > 0) {
-                $config['base_url'] = base_url() . 'almacen/grupos/searchGrupo/' . urlencode($text);
-                $config['total_rows'] = $num_row;
-                $config['per_page'] = '10';
-                $config['uri_segment'] = '5';
-                $this->pagination->initialize($config);
-                $data['grupos'] = $this->Grupos_Model->getSearchGrupo($text, $config['per_page'], $this->uri->segment(5));
-                $data['pag_links'] = $this->pagination->create_links();
-            }
-            $this->load->helper(array('funciones_helper'));
-            $data['current'] = 'Almacén';
-            $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'grupos/funciones');
-            $data['title'] = 'SISTCORP - Administraci&oacute;n de Grupos';
-            $data['subtitle'] = 'Administraci&oacute;n de Grupos';
-            $data['main_content'] = 'grupos';
-            $this->load->view('includes/aplication/template', $data);
+                redirect('almacen/grupos/index');
+            }   
         }
     }
 
@@ -223,13 +223,21 @@ class Grupos extends MX_Controller {
      * como parámetro
      * @access     public
      */
-    function deleteGrupo() {
-        if (!$this->Grupos_Model->deleteGrupo($this->uri->segment(4))) {
-            $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar el grupo. Por favor vuelva a intentarlo.');
-        } else {
-            $this->session->set_flashdata('mensaje_exito', 'El grupo se eliminó satisfactoriamente.');
+    function deleteGrupo() 
+    {
+        if ($this->_is_logged_in()) {
+            if ($this->uri->segment(4)) {
+                $grupo = $this->Grupos_Model->getGrupoByID($this->uri->segment(4));
+                if (count($grupo) && is_object($grupo)) {
+                    if (!$this->Grupos_Model->deleteGrupo($this->uri->segment(4))) {
+                        $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar el grupo. Por favor vuelva a intentarlo.');
+                    } else {
+                        $this->session->set_flashdata('mensaje_exito', 'El grupo se eliminó satisfactoriamente.');
+                    }
+                    redirect('almacen/grupos');
+                }                
+            }            
         }
-        redirect('almacen/grupos');
     }
 
     /**
@@ -237,7 +245,8 @@ class Grupos extends MX_Controller {
      * @access     private
      * @return     boolean     Si no estamos logueados devolverá FALSE
      */
-    function _is_logged_in() {
+    function _is_logged_in() 
+    {
         $is_logged_in = $this->session->userdata('logged_in');
         if (!isset($is_logged_in) || $is_logged_in != TRUE) {
             redirect('usuarios');

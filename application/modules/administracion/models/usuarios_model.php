@@ -14,65 +14,58 @@ class Usuarios_Model extends CI_Model {
     }
 
     /** (1)
-     * Método para obtener el número total de resultados de una consulta
-     * @param   String      $text   Texto que se buscará en el parámetro seleccionado
-     * @param   String      $parameter   Parámetro de busqueda
-     * @return  Integer     Número de filas que devuelve la consulta
-     */
-    function getNumRows($text = NULL, $parameter = '') {
-        if (!is_null($text)) {
-            $this->db->select('ID_USUARIO');
-            $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
-            $this->db->where($where);
-            switch ($parameter) {
-                case 'Username' :
-                    $this->db->like('Usuario', $text);
-                    break;
-                case 'Nombres' :
-                    $this->db->like('Nombres', $text);
-                    break;
-                case 'Apaterno' :
-                    $this->db->like('Ape_Paterno', $text);
-                    break;
-                case 'Amaterno' :
-                    $this->db->like('Ape_Materno', $text);
-                    break;
-                case 'Todos' :
-                    $this->db->like('Usuario', $text);
-                    $this->db->or_like('Nombres', $text);
-                    $this->db->or_like('Ape_Paterno', $text);
-                    $this->db->or_like('Ape_Materno', $text);
-                    break;
-            }
-            $result = $this->db->get($this->_table);
-            return $result->num_rows();
-        } else {
-            $this->db->select('ID_USUARIO');
-            $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
-            $this->db->where($where);
-            $result = $this->db->get($this->_table);
-            return $result->num_rows();
-        }
-    }
-
-    /** (1)
      * Método para obtener listado de usuarios pero con limit definido
      * @param   String  $cuantos    Número de perfiles a listar
      * @param   String  $inicio     Desde donde empieza a listar
      * @return  Array
      */
-    function getUsersLimit($cuantos, $inicio) {
-        $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, Sexo, Email, tbl_usuario.Activo, tbl_usuario.ID_EMPRESA, PERFIL');
-        $this->db->from('tbl_usuario');
-        $this->db->join('tbl_perfil', 'tbl_usuario.ID_PERFIL = tbl_perfil.ID_PERFIL');
-        $where = array('tbl_usuario.ID_EMPRESA' => $this->session->userdata('empresa'));
+    function getUsuarios($query_array, $cuantos, $inicio) {
+        $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, Sexo, Email, u.Activo, u.ID_EMPRESA, PERFIL');
+        $this->db->from('tbl_usuario u');
+        $this->db->join('tbl_perfil p', 'u.ID_PERFIL = p.ID_PERFIL');
+        $where = array('u.ID_EMPRESA' => $this->session->userdata('empresa'));
         $this->db->where($where);
-        $this->db->limit($cuantos, $inicio);
-        $result = $this->db->get();
-        if ($result->num_rows() <= 0) {
-            return FALSE;
+        if (count($query_array) > 0) {
+            if (strlen($query_array['Usuario'])) {
+                if (isset($query_array['Condicion'])) {
+                    switch ($query_array['Condicion']) {
+                        case 'Username':
+                            $this->db->like('Usuario', $query_array['Usuario']);
+                            break;
+                        case 'Nombres':
+                            $this->db->like('Nombres', $query_array['Usuario']);
+                            break;
+                        case 'Apaterno':
+                            $this->db->like('Ape_Paterno', $query_array['Usuario']);
+                            break;
+                        case 'Amaterno':
+                            $this->db->like('Ape_Materno', $query_array['Usuario']);
+                            break;
+                    }
+                } else {
+                    $this->db->like('Usuario', $query_array['Usuario']);
+                    $this->db->or_like('Nombres', $query_array['Usuario']);
+                    $this->db->or_like('Ape_Paterno', $query_array['Usuario']);
+                    $this->db->or_like('Ape_Materno', $query_array['Usuario']);
+                }
+            }
         }
-        return $result->result();
+        $this->db->order_by("ID_USUARIO", "asc");
+        $this->db->limit($cuantos, $inicio);
+        $result['rows'] = $this->db->get()->result();
+        
+        $this->db->select('ID_USUARIO');
+        $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
+        $this->db->where($where);
+        if (count($query_array) > 0) {
+            if (strlen($query_array['Usuario'])) {
+                $this->db->like('Usuario', $query_array['Usuario']);
+            }
+        }
+        $tmp = $this->db->get($this->_table);
+        $result['num_rows'] = $tmp->num_rows();
+        
+        return $result;
     }
 
     /** (1)
@@ -80,7 +73,8 @@ class Usuarios_Model extends CI_Model {
      * @param   String $username 
      * @return  Boolean
      */
-    function getUserByUsername($username) {
+    function getUserByUsername($username) 
+    {
         $this->db->where('Usuario', $username);
         $result = $this->db->get($this->_table);
         if ($result->num_rows() <= 0) {
@@ -104,7 +98,8 @@ class Usuarios_Model extends CI_Model {
      * @param       Integer   $data['ID_PERFIL'] ID_Perfil
      * @return      Boolean     De acuerdo si se efectuó correctamente la inserción
      */
-    function addUser($data) {
+    function addUser($data) 
+    {
         // Verificamos que el usuario a agregar no se encuentre ya registrado en la base de datos
         $this->db->where('Usuario', $data['Usuario']);
         $this->db->or_where('Email', $data['Email']);
@@ -113,7 +108,7 @@ class Usuarios_Model extends CI_Model {
             return FALSE;
         } else {
             $this->db->insert($this->_table, $data);
-            return$this->db->insert_id();
+            return $this->db->insert_id();
         }
     }
 
@@ -124,7 +119,8 @@ class Usuarios_Model extends CI_Model {
      * @return      Array       Obtenemos un array con los datos del perfil
      *                          indicado
      */
-    function getUserByID($id) {
+    function getUserByID($id) 
+    {
         $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, Sexo, Email, Telefono, Activo, ID_EMPRESA, ID_PERFIL');
         $where = array('ID_EMPRESA' => $this->session->userdata('empresa'), 'ID_USUARIO' => $id);
         $this->db->where($where);
@@ -141,7 +137,8 @@ class Usuarios_Model extends CI_Model {
      * @param       String      $email
      * @return      Boolean     
      */
-    function verifyEmail($email) {
+    function verifyEmail($email) 
+    {
         $this->db->where('Email', $email);
         $result = $this->db->get($this->_table);
         if ($result->num_rows() <= 0) {
@@ -164,7 +161,8 @@ class Usuarios_Model extends CI_Model {
      * @param       Integer   $data['ID_PERFIL'] ID_Perfil
      * @return      Boolean     De acuerdo si se efectuó correctamente la edición
      */
-    function editUser($data, $id_usuario) {
+    function editUser($data, $id_usuario) 
+    {
         $id = (int) $id_usuario;
         if (is_int($id)) {
             $this->db->where('ID_USUARIO', $id);
@@ -179,50 +177,8 @@ class Usuarios_Model extends CI_Model {
      * @return      Boolean     De acuerdo si se efectuó correctamente la
      *                          inserción
      */
-    function deleteUser($id_usuario) {
+    function deleteUser($id_usuario) 
+    {
         return $this->db->delete('tbl_usuario', array('ID_USUARIO' => $id_usuario));
     }
-
-    /* (1)
-     * Método para realizar la búsqueda en base al parámetro buscado
-     * @access      public
-     * @param       String  $text       Texto a buscar
-     * @param       Integer $cuantos    Total de registros
-     * @param       Integer $inicio     Desde donde comienza a buscar los registros
-     */
-
-    function getSearchUser($text, $parameter, $cuantos, $inicio) {
-        $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, Sexo, Email, tbl_usuario.Activo, tbl_usuario.ID_EMPRESA, PERFIL');
-        $this->db->from($this->_table);
-        $this->db->join('tbl_perfil', 'tbl_usuario.ID_PERFIL = tbl_perfil.ID_PERFIL');
-        $where = array('tbl_usuario.ID_EMPRESA' => $this->session->userdata('empresa'));
-        $this->db->where($where);
-        switch ($parameter) {
-            case 'Username' :
-                $this->db->like('Usuario', $text);
-                break;
-            case 'Nombres' :
-                $this->db->like('Nombres', $text);
-                break;
-            case 'Apaterno' :
-                $this->db->like('Ape_Paterno', $text);
-                break;
-            case 'Amaterno' :
-                $this->db->like('Ape_Materno', $text);
-                break;
-            case 'Todos' :
-                $this->db->like('Usuario', $text);
-                $this->db->or_like('Nombres', $text);
-                $this->db->or_like('Ape_Paterno', $text);
-                $this->db->or_like('Ape_Materno', $text);
-                break;
-        }
-        $this->db->limit($cuantos, $inicio);
-        $result = $this->db->get();
-        if ($result->num_rows() <= 0) {
-            return FALSE;
-        }
-        return $result->result();
-    }
-
 }

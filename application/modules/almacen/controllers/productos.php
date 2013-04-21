@@ -9,7 +9,8 @@ if (!defined('BASEPATH'))
  *                referente a los productos
  * @author Ing. José Pérez
  */
-class Productos extends CI_Controller {
+class Productos extends MX_Controller
+{
 
     function __construct() {
         parent::__construct();

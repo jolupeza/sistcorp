@@ -1,21 +1,21 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 // First Links
-$config['first_link'] = 'Primero';
+$config['first_link'] = '«';
 $config['first_tag_open'] = '<li>';
 $config['first_tag_close'] = '</li>';
 
 // Last Links
-$config['last_link'] = '&Uacute;ltimo';
+$config['last_link'] = '»';
 $config['last_tag_open'] = '<li>';
 $config['last_tag_close'] = '</li>';
 
 // Next Link
-$config['next_link'] = '»';
+$config['next_link'] = '>';
 $config['next_tag_open'] = '<li>';
 $config['next_tag_close'] = '</li>';
 
 // Previous Link
-$config['prev_link'] = '«';
+$config['prev_link'] = '<';
 $config['prev_tag_open'] = '<li>';
 $config['prev_tag_close'] = '</li>';
 

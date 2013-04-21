@@ -57,12 +57,12 @@
                     </tr>
                     <?php foreach ($clases as $clase) : ?>
                         <tr class="content_grid">
-                            <td class="alig_center"><?php echo $clase->ID_CLASEPROD; ?></td>
-                            <td class="alig_left"><?php echo $clase->Clase; ?></td>
-                            <td class="alig_left"><?php echo $clase->Grupo; ?></td>
-                            <td class="alig_center"><?php $activo = ($clase->Activo == '1') ? 'S&iacute;' : 'No'; echo $activo; ?></td>
-                            <td class="alig_center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idclase="' . $clase->ID_CLASEPROD . '" class="editClase" title="Editar ' . $clase->Clase . '"') ?></td>
-                            <td class="alig_center"><a href="javascript:void(0);" title="Eliminar <?php echo $clase->Clase; ?>" onclick="deleteRow('<?php echo $clase->Clase; ?>','<?php echo base_url() . 'almacen/clases/deleteClase/' . $clase->ID_CLASEPROD; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
+                            <td class="text-center"><?php echo $clase->ID_CLASEPROD; ?></td>
+                            <td><?php echo $clase->Clase; ?></td>
+                            <td><?php echo $clase->Grupo; ?></td>
+                            <td class="text-center"><?php $activo = ($clase->Activo == '1') ? 'S&iacute;' : 'No'; echo $activo; ?></td>
+                            <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idclase="' . $clase->ID_CLASEPROD . '" class="editClase" title="Editar ' . $clase->Clase . '"') ?></td>
+                            <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $clase->Clase; ?>" onclick="deleteRow('<?php echo $clase->Clase; ?>','<?php echo base_url() . 'almacen/clases/deleteClase/' . $clase->ID_CLASEPROD; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
@@ -80,13 +80,13 @@
         <!-- Fin #main -->
 
         <!-- Formulario que nos permitirá agregar un nuevo grupo -->        
-        <!-- Inicio divIngresoForm -->
-        <div class="modal hide fade" id="divIngresoForm">
+        <!-- Inicio addClaseModal -->
+        <div class="modal hide fade" id="addClaseModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Agregar Clase</h3>
             </div>
-            <?php echo form_open('almacen/clases/verifyAddClase', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/clases/verifyAddClase', array('name' => 'frmAddClase', 'id' => 'frmAddClase', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Clase: *', 'txtClase', array('class' => 'control-label')); ?>
@@ -133,28 +133,23 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Clase', 'content' => 'Agregar Clase', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Clase', 'content' => 'Agregar Clase'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
-            <!-- Inicio div cargando -->
-            <div id="cargando"  class="hidden">
-                <?php echo img(base_url() . 'images/ajax-loader.gif'); ?>
-            </div>
-            <!-- Fin div cargando -->
         </div>
-        <!-- Fin divIngresoForm -->     
+        <!-- Fin addClaseModal -->     
 
         <!-- Formulario que nos permitirá editar información de un grupo -->        
-        <!-- Inicio divEditForm -->
-        <div class="modal hide fade" id="divEditForm">
+        <!-- Inicio editClaseModal -->
+        <div class="modal hide fade" id="editClaseModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Editar Grupo</h3>                
             </div>
-            <?php echo form_open('almacen/clases/verifyEditClase', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/clases/verifyEditClase', array('name' => 'frmEditClase', 'id' => 'frmEditClase', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Clase: *', 'txtClaseEdit', array('class' => 'control-label')); ?>
@@ -200,17 +195,14 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Clase', 'content' => 'Editar Clase', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Clase', 'content' => 'Editar Clase'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
-            <!-- Inicio div cargando -->
-            <div id="cargando" class="hidden"><?php echo img(base_url() . 'images/ajax-loader.gif'); ?></div>
-            <!-- Fin div cargando -->
         </div>
-        <!-- Fin divEditForm -->                
+        <!-- Fin editClaseModal -->                
     </div>
 </div>
 <!-- Fin container -->

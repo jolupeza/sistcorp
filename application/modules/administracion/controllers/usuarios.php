@@ -1,16 +1,15 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : administracion/controllers/usuarios.php
  * Descripción  : Controlador que se encargará de administrar los usuarios.
  * @author Ing. José Pérez
  */
-class Usuarios extends MX_Controller {
+class Usuarios extends MX_Controller 
+{
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->load->model('Usuarios_Model');
         $this->load->helper('form');
@@ -22,29 +21,46 @@ class Usuarios extends MX_Controller {
     /**
      * Nos cargará la vista por defecto del controlador perfil
      */
-    function index() {
+    function index($query_id = 0) 
+    {
         if ($this->_is_logged_in()) {
+            $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
+            
+            $query_array = array();
+            if ($query_id > 0) {
+                $this->input->load_query($query_id);
+                $query_array = array(
+                    'Usuario' => $this->input->get('Usuario')
+                );
+                if ($this->input->get('Condicion')) {
+                    $query_array['Condicion'] = $this->input->get('Condicion');
+                }
+            }
 
-            $num_row = $this->Usuarios_Model->getNumRows();
-            if (is_numeric($num_row) && $num_row > 0) {
-                $config['base_url'] = base_url() . 'administracion/usuarios/index';
-                $config['total_rows'] = $num_row;
-                $config['per_page'] = '5';
-                $config['uri_segment'] = '4';
+            $results = $this->Usuarios_Model->getUsuarios($query_array, $limit, $this->uri->segment(5));
+            $data['users'] = $results['rows'];
+            $data['query_id'] = $query_id;
+            $data['num_rows'] = $results['num_rows'];
+            
+            if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
+                $config['base_url'] = base_url() . 'administracion/usuarios/index/' . $query_id;
+                $config['total_rows'] = $results['num_rows'];
+                $config['per_page'] = '10';
+                $config['uri_segment'] = '5';
                 $this->pagination->initialize($config);
-                $data['users'] = $this->Usuarios_Model->getUsersLimit($config['per_page'], $this->uri->segment(4));
                 $data['pag_links'] = $this->pagination->create_links();
             }
             // Enviamos los perfiles para que se carguen al momento de agregar o editar un usuario.
             $this->load->model('Perfil_Model');
-            $perfiles = $this->Perfil_Model->getPerfil();
+            $perfiles = $this->Perfil_Model->getPerfilTotal();
             if (is_array($perfiles)) {
                 $data['perfiles'] = $perfiles;
             }
+            
             $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
@@ -59,7 +75,8 @@ class Usuarios extends MX_Controller {
     /**
      * Función para validar a través de Ajax
      */
-    function validateUserAjax() {
+    function validateUserAjax() 
+    {
         $this->load->library('validator');
         $response =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
@@ -82,7 +99,8 @@ class Usuarios extends MX_Controller {
      *  Nos permitirá enviar email para validación de usuario.
      * @access      private 
      */
-    function _sendEmail($to, $code, $id_user) {
+    function _sendEmail($to, $code, $id_user) 
+    {
         // Enviamos correo al nuevo usuario para que active su cuenta
         $this->email->from('jolupeza@hotmail.com', 'SISTCORP');
         $this->email->to($to);
@@ -98,7 +116,8 @@ class Usuarios extends MX_Controller {
      * ingresará el nuevo registro a la base de datos. 
      * @access     public
      */
-    function verifyAddUser() {
+    function verifyAddUser() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtNomUser', 'Nombre', 'trim|required');
             $this->form_validation->set_rules('txtApePaterno', 'A. Paterno', 'trim|required');
@@ -152,7 +171,8 @@ class Usuarios extends MX_Controller {
      * @param  String  $value
      * @return Boolean
      */
-    function _verifySelect($value) {
+    function _verifySelect($value) 
+    {
         if ($value == '0') {
             return FALSE;
         } else {
@@ -165,7 +185,8 @@ class Usuarios extends MX_Controller {
      * @param  String  $email
      * @return Boolean
      */
-    function _verifyExistEmail($value) {
+    function _verifyExistEmail($value) 
+    {
         $result = $this->Usuarios_Model->verifyEmail($value);
         if ($result) {
             return TRUE;
@@ -179,7 +200,8 @@ class Usuarios extends MX_Controller {
      * @param  String  $username
      * @return Boolean
      */
-    function _verifyExistUser($value) {
+    function _verifyExistUser($value) 
+    {
         $result = $this->Usuarios_Model->getUserByUsername($value);
         if ($result) {
             return TRUE;
@@ -195,7 +217,8 @@ class Usuarios extends MX_Controller {
      * @param      $length     Tamaño del código aleatorio
      * @return     String      Código aleatorio
      */
-    function _random_string($length) {
+    function _random_string($length) 
+    {
         $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*-+';
         $max = strlen($base) - 1;
         $activation_code = '';
@@ -209,7 +232,8 @@ class Usuarios extends MX_Controller {
      * Método que permitirá editar al usuario seleccionado
      * @access     public
      */
-    function editUser() {
+    function getUser() 
+    {
         if ($this->_is_logged_in()) {
             $result = $this->Usuarios_Model->getUserByID($this->input->post('iduser'));
             if (is_object($result)) {
@@ -223,7 +247,8 @@ class Usuarios extends MX_Controller {
      * valores para editar. 
      * @access     public
      */
-    function verifyEditUser() {
+    function verifyEditUser() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtNomUserEdit', 'Nombre', 'trim|required');
             $this->form_validation->set_rules('txtApePaternoEdit', 'A. Paterno', 'trim|required');
@@ -316,7 +341,8 @@ class Usuarios extends MX_Controller {
      * como parámetro
      * @access     public
      */
-    function deleteUser() {
+    function deleteUser() 
+    {
         if (!$this->Usuarios_Model->deleteUser($this->uri->segment(4))) {
             $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar al usuario. Por favor vuelva a intentarlo.');
         } else {
@@ -329,48 +355,23 @@ class Usuarios extends MX_Controller {
      * Función que permitirá buscar un determinado perfil
      * @access     public
      */
-    function searchUser($text = NULL, $parameter = NULL) {
+    function searchUser() 
+    {
         if ($this->_is_logged_in()) {
-            $mod = $this->Modulos_Model->getModulos();
-            if (is_array($mod)) {
-                $data['modulos'] = $mod;
-            }
+            if ($this->input->post('txtUser') != '') {
+                $query_array = array(
+                    'Usuario' => $this->input->post('txtUser')
+                );
 
-            if (is_null($text) AND is_null($parameter)) {
-                if ($this->input->post('txtText') == '') {
-                    redirect('administracion/usuarios');
-                } else {
-                    $parameter = ($this->input->post('rbtText') == '') ? 'Todos' : $this->input->post('rbtText');
-                    $text =$this->input->post('txtText');
+                if ($this->input->post('rbtText') != '') {
+                    $query_array['Condicion'] = $this->input->post('rbtText');
                 }
-            } else {
-                $text = urldecode($text);
-            }
-            
-            $num_row = $this->Usuarios_Model->getNumRows($text, $parameter);
-            if (is_numeric($num_row) && $num_row > 0) {
-                $config['base_url'] = base_url() . 'administracion/usuarios/searchUser/' . urlencode($text) . '/' . $parameter;
-                $config['uri_segment'] = '6';
-                $config['total_rows'] = $num_row;
-                $config['per_page'] = '1';
-                $this->pagination->initialize($config);
-                $data['users'] = $this->Usuarios_Model->getSearchUser($text, $parameter, $config['per_page'], $this->uri->segment(6));
-                $data['pag_links'] = $this->pagination->create_links();
-            }
 
-            $this->load->model('Perfil_Model');
-            $perfiles = $this->Perfil_Model->getPerfil();
-            if (is_array($perfiles)) {
-                $data['perfiles'] = $perfiles;
+                $query_id = $this->input->save_query($query_array);
+                redirect('administracion/usuarios/index/' . $query_id);
+            } else {
+                redirect('administracion/usuarios/index');
             }
-            $this->load->helper(array('funciones_helper'));
-            $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
-            $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'usuarios/funciones');
-            $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
-            $data['subtitle'] = 'Administraci&oacute;n de Usuarios';
-            $data['main_content'] = 'usuarios';
-            $this->load->view('includes/aplication/template', $data);
         }
     }
 
@@ -387,5 +388,4 @@ class Usuarios extends MX_Controller {
             return TRUE;
         }
     }
-
 }

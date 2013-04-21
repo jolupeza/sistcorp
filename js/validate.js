@@ -7,6 +7,8 @@ var showErrors = true;
 // inicializa la cache para las peticiones de validaci�n 
 var cache = new Array();
 
+var rptaValidation = 0;
+
 // crea una instancia XMLHttpRequest
 function createXmlHttpRequestObject(){
     // almacenará la referencia al objeto XMLHttpRequest
@@ -44,8 +46,7 @@ function displayError($message){
     if (showErrors){
         // devuelve error mostrando Off
         showErrors = false;
-        // muestra mensaje error
- 
+        // muestra mensaje error 
         alert("Error encontrado: \n" + $message);
         // reintenta validaci�n despu�s de 10 segundos
         setTimeout("validate();", 10000);
@@ -121,9 +122,13 @@ function readResponse(){
     fieldID = xmlDoc.getElementsByTagName("fieldid")[0].firstChild.data;
     // muestra el error o bien oculta el error
     if(result==0){
-        $('#'+fieldID+'Failed').removeClass('ok').removeClass('hidden').addClass('nook');
+        $('#'+fieldID+'Failed').removeClass('ok hidden').addClass('nook');
+        rptaValidation = 1;
+        $(':input[id$="Aceptar"]').prop('disabled', true);
     }else if(result==1){
-        $('#'+fieldID+'Failed').removeClass('nook').removeClass('hidden').addClass('ok');
+        $('#'+fieldID+'Failed').removeClass('nook hidden').addClass('ok');
+        rptaValidation = 0;
+        $(':input[id$="Aceptar"]').prop('disabled', false);
     }
     // llama a validate() de nuevo, en caso que haya valores en la cache
     setTimeout("validate();", 500);

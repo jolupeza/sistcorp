@@ -28,8 +28,8 @@
                 echo form_open('almacen/familias/searchFamilia', array('name' => 'frmsearch', 'class' => 'form-search'));
                 ?>
                 <div class="input-append">
-                    <?php echo form_input(array('name' => 'txtNomFamilia', 'class' => 'span7 search-query')); ?>
-                    <button type="submit" class="btn"><i class="icon-search"></i></button>
+                    <?php echo form_input(array('name' => 'txtNomFamilia', 'class' => 'span7 search-query', 'value' => set_value('txtNomFamilia'))); ?>
+                    <button id="searchFamilia" type="submit" class="btn"><i class="icon-search"></i></button>
                 </div>
                 <?php
                 echo form_close();
@@ -52,13 +52,13 @@
         <!-- Fin #main -->
 
         <!-- Formulario que nos permitirá agregar un nuevo grupo -->        
-        <!-- Inicio divIngresoForm -->
-        <div class="modal hide fade" id="divIngresoForm">
+        <!-- Inicio addFamiliaModal -->
+        <div class="modal hide fade" id="addFamiliaModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Agregar Familia</h3>
             </div>
-            <?php echo form_open('almacen/familias/verifyAddFamilia', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/familias/verifyAddFamilia', array('name' => 'frmAddFamilia', 'id' => 'frmAddFamilia', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Familia: *', 'txtFamilia', array('class' => 'control-label')); ?>
@@ -116,28 +116,23 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Familia', 'content' => 'Agregar Familia', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Familia', 'content' => 'Agregar Familia'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
-            <!-- Inicio div cargando -->
-            <div id="cargando"  class="hidden">
-                <?php echo img(base_url() . 'images/ajax-loader.gif'); ?>
-            </div>
-            <!-- Fin div cargando -->
         </div>
-        <!-- Fin divIngresoForm -->     
+        <!-- Fin addFamiliaModal -->     
 
         <!-- Formulario que nos permitirá editar información de un grupo -->        
-        <!-- Inicio divEditForm -->
-        <div class="modal hide fade" id="divEditForm">
+        <!-- Inicio editFamiliaModal -->
+        <div class="modal hide fade" id="editFamiliaModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Editar Familia</h3>                
             </div>
-            <?php echo form_open('almacen/familias/verifyEditFamilia', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/familias/verifyEditFamilia', array('name' => 'frmEditFamilia', 'id' => 'frmEditFamilia', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Familia: *', 'txtFamiliaEdit', array('class' => 'control-label')); ?>
@@ -196,17 +191,13 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Familia', 'content' => 'Editar Familia', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Familia', 'content' => 'Editar Familia'));
                 ?> 
             </div>
-            <?php echo form_close(); ?>
-            <!-- Inicio div cargando -->
-            <div id="cargando" class="hidden"><?php echo img(base_url() . 'images/ajax-loader.gif'); ?></div>
-            <!-- Fin div cargando -->
         </div>
-        <!-- Fin divEditForm -->                
+        <!-- Fin editFamiliaModal -->                
     </div>
 </div>
 <!-- Fin container -->

@@ -1,16 +1,15 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : administracion/controllers/perfil.php
  * Descripción  : Controlador que se encargará de administrar los perfiles de usuarios disponibles en la aplicación.
  * @author Ing. José Pérez
  */
-class Perfil extends MX_Controller {
+class Perfil extends MX_Controller 
+{
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->load->model('Perfil_Model');
         $this->load->helper('form');
@@ -21,21 +20,35 @@ class Perfil extends MX_Controller {
     /**
      * Nos cargará la vista por defecto del controlador perfil
      */
-    function index() {
+    function index($query_id = 0) 
+    {
         if ($this->_is_logged_in()) {
+            $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
+            
+            $query_array = array();
+            if ($query_id > 0) {
+                $this->input->load_query($query_id);
+                $query_array = array(
+                    'Perfil' => $this->input->get('Perfil')
+                );
+            }
+            
+            $results = $this->Perfil_Model->getPerfiles($query_array, $limit, $this->uri->segment(5));
+            
+            $data['perfil'] = $results['rows'];
+            $data['query_id'] = $query_id;
+            $data['num_rows'] = $results['num_rows'];
 
-            $num_row = $this->Perfil_Model->getNumRows();
-            if (is_numeric($num_row) && $num_row > 0) {
-                $config['base_url'] = base_url() . 'administracion/perfil/index';
-                $config['total_rows'] = $num_row;
-                $config['per_page'] = '5';
-                $config['uri_segment'] = '4';
+            if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
+                $config['base_url'] = base_url() . 'administracion/perfil/index' . $query_id;
+                $config['total_rows'] = $results['num_rows'];
+                $config['per_page'] = '10';
+                $config['uri_segment'] = '5';
                 $this->pagination->initialize($config);
-                $data['perfil'] = $this->Perfil_Model->getPerfilLimit($config['per_page'], $this->uri->segment(4));
                 $data['pag_links'] = $this->pagination->create_links();
             }
             $this->load->helper(array('funciones_helper'));
@@ -52,7 +65,8 @@ class Perfil extends MX_Controller {
     /**
      * Función para validar a través de Ajax
      */
-    function validatePerfilAjax() {
+    function validatePerfilAjax() 
+    {
         $this->load->library('validator');
         $response =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
@@ -76,7 +90,8 @@ class Perfil extends MX_Controller {
      * ingresará el nuevo registro a la base de datos. 
      * @access     public
      */
-    function verifyAddPerfil() {
+    function verifyAddPerfil() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtPerfil', 'Perfil', 'trim|required|callback__verifyExistPerfil');
             $this->form_validation->set_message('required', 'El %s es requerido');
@@ -107,7 +122,8 @@ class Perfil extends MX_Controller {
      * @param  String  $perfil
      * @return Boolean
      */
-    function _verifyExistPerfil($perfil) {
+    function _verifyExistPerfil($perfil) 
+    {
         $result = $this->Perfil_Model->getPerfilByName($perfil);
         if ($result) {
             return TRUE;
@@ -121,7 +137,8 @@ class Perfil extends MX_Controller {
      * @access     public
      * @param      integer     $id_perfil  Contiene el id del perfil a editar
      */
-    function editPerfil() {
+    function getPerfil() 
+    {
         if ($this->_is_logged_in()) {
             $id = $this->input->post('idperfil');
             $result = $this->Perfil_Model->getPerfilByID($id);
@@ -136,7 +153,8 @@ class Perfil extends MX_Controller {
      * a editPerfil. Y si cumple se actualizará el perfil en la base de datos.
      * @access     public
      */
-    function verifyEditPerfil() {
+    function verifyEditPerfil() 
+    {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtPerfilEdit', 'Perfil', 'trim|required');
             $this->form_validation->set_message('required', 'El %s es requerido');
@@ -180,56 +198,38 @@ class Perfil extends MX_Controller {
      * como parámetro
      * @access     public
      */
-    function deletePerfil() {
-        if (!$this->Perfil_Model->deletePerfil($this->uri->segment(4))) {
-            $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar el perfil. Por favor vuelva a intentarlo.');
-        } else {
-            $this->session->set_flashdata('mensaje_exito', 'El perfil se eliminó satisfactoriamente.');
+    function deletePerfil() 
+    {
+        if ($this->_is_logged_in()) {
+            if ($this->uri->segment(4)) {
+                if (!$this->Perfil_Model->deletePerfil($this->uri->segment(4))) {
+                    $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar el perfil. Por favor vuelva a intentarlo.');
+                } else {
+                    $this->session->set_flashdata('mensaje_exito', 'El perfil se eliminó satisfactoriamente.');
+                }
+            }
+            redirect('administracion/perfil');
         }
-        redirect('administracion/perfil');
     }
 
     /**
      * Función que permitirá buscar un determinado perfil
      * @access     public
      */
-    function searchPerfil($texto = NULL) {
+    function searchPerfil() 
+    {
         if ($this->_is_logged_in()) {
-            $this->load->model('Modulos_Model');
-            $mod = $this->Modulos_Model->getModulos();
-            if (is_array($mod)) {
-                $data['modulos'] = $mod;
+            if ($this->input->post('txtNomPerfil') == '') {
+                redirect('administracion/perfil/index');
             }
-
-            if (is_null($texto)) {
-                if ($this->input->post('txtNomPerfil') == '') {
-                    redirect('administracion/perfil');
-                } else {
-                    $texto = $this->input->post('txtNomPerfil');
-                }
-            } else {
-                $texto = urldecode($texto);
-            }
-
-            $num_row = $this->Perfil_Model->getNumRows($texto);
-            if (is_numeric($num_row) AND $num_row > 0) {
-                $config['base_url'] = base_url() . 'administracion/perfil/searchPerfil/' . urlencode($texto);
-                $config['total_rows'] = $num_row;
-                $config['per_page'] = '5';
-                $config['uri_segment'] = '5';
-                $this->pagination->initialize($config);
-                $data['perfil'] = $this->Perfil_Model->getSearchPerfil($texto, $config['per_page'], $this->uri->segment(5));
-                $data['pag_links'] = $this->pagination->create_links();
-            }
-            $this->load->helper(array('funciones_helper'));
-            $data['current'] = 'Administración';
-            $data['cssLoad'] = array('jquery.alerts');
-            $data['jsLoad'] = array('funciones',  'validate', 'jquery.alerts');
-            $data['jsPropio'] = array('perfil/funciones');
-            $data['title'] = 'SISTCORP - Administraci&oacute;n de Perfiles';
-            $data['subtitle'] = 'Administraci&oacute;n de Perfiles';
-            $data['main_content'] = 'perfil';
-            $this->load->view('includes/aplication/template', $data);
+            
+            $query_array = array(
+                'Perfil' => $this->input->post('txtNomPerfil')
+            );
+            
+            $query_id = $this->input->save_query($query_array);
+            redirect('administracion/perfil/index/' . $query_id);
+            
         }
     }
 

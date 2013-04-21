@@ -13,7 +13,7 @@
         <!-- Fin #submenu -->
         <!-- Inicio #main -->
         <section class="span9" id="main">
-            <div class="alert alert-info">
+            <div class="alert alert-error">
                 <h3><?php echo $subtitle; ?></h3>      
                 <p>Su cuenta no ha podido ser activada. Por favor verifique que haya recibido correctamente el correo de verificaci&oacute;n de cuenta o que su cuenta ya este activada.</p>            
                 <h5><?php echo anchor(site_url() . 'login', 'Click aqu&iacute; para loguearse.') ?></h5>

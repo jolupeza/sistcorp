@@ -56,11 +56,11 @@
                     </tr>
                     <?php foreach ($grupos as $row) : ?>
                         <tr class="content_grid">
-                            <td class="alig_center"><?php echo $row->ID_GRUPOPROD; ?></td>
-                            <td class="alig_left"><?php echo $row->Grupo; ?></td>
-                            <td class="alig_center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No'; echo $activo; ?></td>
-                            <td class="alig_center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idgrupo="' . $row->ID_GRUPOPROD . '" class="editGrupo" title="Editar ' . $row->Grupo . '"') ?></td>
-                            <td class="alig_center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Grupo; ?>" onclick="deleteRow('<?php echo $row->Grupo; ?>','<?php echo base_url() . 'almacen/grupos/deleteGrupo/' . $row->ID_GRUPOPROD; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
+                            <td class="text-center"><?php echo $row->ID_GRUPOPROD; ?></td>
+                            <td><?php echo $row->Grupo; ?></td>
+                            <td class="text-center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No'; echo $activo; ?></td>
+                            <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idgrupo="' . $row->ID_GRUPOPROD . '" class="editGrupo" title="Editar ' . $row->Grupo . '"') ?></td>
+                            <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Grupo; ?>" onclick="deleteRow('<?php echo $row->Grupo; ?>','<?php echo base_url() . 'almacen/grupos/deleteGrupo/' . $row->ID_GRUPOPROD; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
@@ -78,13 +78,13 @@
         <!-- Fin #main -->
 
         <!-- Formulario que nos permitirá agregar un nuevo grupo -->        
-        <!-- Inicio divIngresoForm -->
-        <div class="modal hide fade" id="divIngresoForm">
+        <!-- Inicio addGrupoModal -->
+        <div class="modal hide fade" id="addGrupoModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Agregar Grupo</h3>
             </div>
-            <?php echo form_open('almacen/grupos/verifyAddGrupo', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/grupos/verifyAddGrupo', array('name' => 'frmAddGrupo', 'id' => 'frmAddGrupo', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Grupo: *', 'txtGrupo', array('class' => 'control-label')); ?>
@@ -115,9 +115,9 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Grupo', 'content' => 'Agregar Grupo', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Grupo', 'content' => 'Agregar Grupo'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
@@ -127,16 +127,16 @@
             </div>
             <!-- Fin div cargando -->
         </div>
-        <!-- Fin divIngresoForm -->     
+        <!-- Fin addGrupoModal -->     
 
         <!-- Formulario que nos permitirá editar información de un grupo -->        
-        <!-- Inicio divEditForm -->
-        <div class="modal hide fade" id="divEditForm">
+        <!-- Inicio editGrupoModal -->
+        <div class="modal hide fade" id="editGrupoModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Editar Grupo</h3>                
             </div>
-            <?php echo form_open('almacen/grupos/verifyEditGrupo', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('almacen/grupos/verifyEditGrupo', array('name' => 'frmEditGrupo', 'id' => 'frmEditGrupo', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Grupo: *', 'txtGrupoEdit', array('class' => 'control-label')); ?>
@@ -169,9 +169,9 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Grupo', 'content' => 'Editar Grupo', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Grupo', 'content' => 'Editar Grupo'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
@@ -179,7 +179,7 @@
             <div id="cargando" class="hidden"><?php echo img(base_url() . 'images/ajax-loader.gif'); ?></div>
             <!-- Fin div cargando -->
         </div>
-        <!-- Fin divEditForm -->                
+        <!-- Fin editGrupoModal -->                
     </div>
 </div>
 <!-- Fin container -->

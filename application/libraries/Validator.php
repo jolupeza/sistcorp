@@ -1,10 +1,8 @@
-<?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // Clase admite validación formulario web PHP y AJAX 
-class Validator {
+class Validator 
+{
 
     /** Creamos propiedad que nos permitirá implementar cualquier funcionalidad
      * de Codeigniter
@@ -13,12 +11,14 @@ class Validator {
 
     // constructor asigna a la propiedad una copia de la instancia del 
     // superobjeto CodeIgniter
-    function __construct() {
+    function __construct() 
+    {
         $this->ci = & get_instance();
     }
 
     // soporte validación AJAX , verifica un valor simple
-    public function validateAJAX($inputValue, $fieldID) {
+    public function validateAJAX($inputValue, $fieldID) 
+    {
         // comprueba que campo est� siendo validado y ejecuta la validaci�n
         switch ($fieldID) {
             // Comprueba si hemos ingresado valor al campo
@@ -37,6 +37,7 @@ class Validator {
             case 'txtFamiliaEdit':
             case 'txtProducto':
             case 'txtProductoEdit':
+            case 'txtEditMarca':
                 return $this->validateRequired($inputValue);
                 break;
 
@@ -94,6 +95,11 @@ class Validator {
             case 'txtGrupo':
                 return $this->validateGrupo($inputValue);
                 break;
+            
+            // Comprube si la marca a registrar se encuentra ya en la base de datos
+            case 'txtMarca':
+                return $this->validateMarca($inputValue);
+                break;
 
             // Comprueba que el precio sea válido y no este vacío
             case 'txtPrecioCosto':
@@ -108,7 +114,8 @@ class Validator {
     }
 
     // validaci�n nombre de perfil (no debe estar vacío, y no debe estar ya registrado)
-    private function validatePerfilName($value) {
+    private function validatePerfilName($value) 
+    {
         // nombre de usuario vacío no es válido
         $value = trim($value);
         if ($value == null)
@@ -122,7 +129,8 @@ class Validator {
     }
 
     // validar que se haya ingresado texto
-    private function validateRequired($value) {
+    private function validateRequired($value) 
+    {
         $value = trim($value);
         if ($value == null) {
             return 0;
@@ -132,7 +140,8 @@ class Validator {
     }
 
     // validación email
-    private function validateEmail($value) {
+    private function validateEmail($value) 
+    {
         // formatos validaci�n email: *@*.*, *@*.*.*, *.*@*.*, *.*@*.*.*)
         $value = trim($value);
         if ($value == null) {
@@ -150,7 +159,8 @@ class Validator {
     }
 
     // validación email cuando se edite
-    private function validateEditEmail($value) {
+    private function validateEditEmail($value) 
+    {
         // formatos validaci�n email: *@*.*, *@*.*.*, *.*@*.*, *.*@*.*.*)
         $value = trim($value);
         if ($value == null) {
@@ -165,23 +175,21 @@ class Validator {
     }
 
     // validación username (no debe estar vacío, y no debe estar ya registrado)
-    private function validateUsername($value) {
+    private function validateUsername($value) 
+    {
         // nombre de usuario vacío no es válido
         $value = trim($value);
         if ($value == null)
             return 0; // no válido
-
-
-
-            
-// comprueba si el nombre de usuario existe en la base de datos
+        // comprueba si el nombre de usuario existe en la base de datos
         $this->ci->load->model('Usuarios_Model');
         $result = $this->ci->Usuarios_Model->getUserByUsername($value);
         return $result;
     }
 
     // validación del password del usuario 
-    private function validatePassword($value) {
+    private function validatePassword($value) 
+    {
         $value = trim($value);
         if ($value == null) {
             return 0;
@@ -193,7 +201,8 @@ class Validator {
     }
 
     // validación del password del usuario 
-    private function validateRepassword($value) {
+    private function validateRepassword($value) 
+    {
         $value = trim($value);
         if ($value == null) {
             return 0;
@@ -205,7 +214,8 @@ class Validator {
     }
 
     // Validamos que se haya seleccionado
-    private function validateSelect($value) {
+    private function validateSelect($value) 
+    {
         if ($value == '0') {
             return 0;
         } else {
@@ -213,7 +223,8 @@ class Validator {
         }
     }
 
-    private function validateGrupo($value) {
+    private function validateGrupo($value) 
+    {
         // nombre de usuario vacío no es válido
         $value = trim($value);
         if ($value == null)
@@ -226,7 +237,8 @@ class Validator {
     }
 
     // validación txtPrecioCosto (no debe estar vacío y debe ser válido)
-    private function validatePrecio($value) {
+    private function validatePrecio($value) 
+    {
         // precio vacío no es válido
         $value = trim($value);
         if ($value == null) {
@@ -236,5 +248,18 @@ class Validator {
         }
         return 1;
     }
-
+    
+    /**
+     * Validamos si al momento de agregar una marca este contenga un nombre y no exista
+     * en la base de datos
+     * @param str $value
+     */
+    private function validateMarca($value)
+    {
+        $value = trim($value);
+        if ($value == NULL) { return 0; }
+        $this->ci->load->model('Marcas_Model');
+        $result = $this->ci->Marcas_Model->getMarca($value);
+        return $result;
+    }
 }

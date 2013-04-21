@@ -2,12 +2,17 @@ $(document).on("ready", function(){
     var $submenu = $("#submenu");
     $('#addGrupo', $submenu).click(function(event){
         event.preventDefault();
-        $('#divIngresoForm').modal();
+        $('#addGrupoModal').on('show', function() {
+            limpiaForm($('#frmAddGrupo'));
+            $('div[id$="Failed"]').addClass('hidden');
+        });
+        $('#addGrupoModal').modal();
     });
     
-    $('#divIngresoForm').on('shown', function () {
-        limpiaForm($('#frm'));
-        $('div[id$="Failed"]').addClass('hidden');
+    $("#btnAddAceptar").on("click", function() {
+        if (rptaValidation == 0) {
+            $("form#frmAddGrupo").submit();
+        }
     });
   
     /**
@@ -19,16 +24,25 @@ $(document).on("ready", function(){
     $('.editGrupo', $main).on("click", function(event){
         event.preventDefault();              
         var id = $(this).data('idgrupo');
-        $.post('/SISTCORP/almacen/grupos/editGrupo', {
+        $.post(_root_ + 'almacen/grupos/getGrupo', {
             'idgrupo': id
         }, function(data) {
-            $('div[id$="Failed"]').addClass('hidden');
-            $('#txtGrupoEdit').val(data.Grupo);
-            $("select[name='ddlActivo'] option[value=" + data.Activo + "]").prop("selected",true);      
-            $('input:hidden[name=id]').val(id);
-            $('input:hidden[name=hdGrupo]').val(data.Grupo);
-            $('#divEditForm').modal(); 
+            $('#editGrupoModal').on('show', function() {
+                limpiaForm($('#frmEditGrupo'));
+                $('div[id$="Failed"]').addClass('hidden');
+                $('#txtGrupoEdit').val(data.Grupo);
+                $("select[name='ddlActivo'] option[value=" + data.Activo + "]").prop("selected",true);      
+                $('input:hidden[name=id]').val(id);
+                $('input:hidden[name=hdGrupo]').val(data.Grupo);
+            });
+            $('#editGrupoModal').modal(); 
         }, 'json');
         return false;        
+    });
+    
+    $("#btnEditAceptar").on("click", function() {
+        if (rptaValidation == 0) {
+            $("form#frmEditGrupo").submit();
+        }
     });
 });

@@ -5,35 +5,46 @@
  * Descripción  : Modelo que trabajará con la tabla tbl_familiaprod
  * @author Ing. José Pérez
  */
-class Familias_Model extends CI_Model {
+class Familias_Model extends CI_Model 
+{
 
     private $_table;
 
-    function __construct() {
+    function __construct() 
+    {
         parent::__construct();
         $this->_table = 'tbl_familiaprod';
     }
-
-    /** (1)
-     * Método para obtener el número total de resultados de una consulta
-     * @param   String      $clase      Clase a buscar
-     * @return  Integer     Número de filas que devuelve la consulta
-     */
-    function getNumRows($familia = NULL) {
-        if (!is_null($familia)) {
-            $this->db->select('ID_FAMILIAPROD');
-            $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
-            $this->db->where($where);
-            $this->db->like('Familia', $familia);
-            $result = $this->db->get($this->_table);
-            return $result->num_rows();
-        } else {
-            $this->db->select('ID_FAMILIAPROD');
-            $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
-            $this->db->where($where);
-            $result = $this->db->get($this->_table);
-            return $result->num_rows();
+    
+    function getFamilias($query_array, $cuantos, $inicio)
+    {
+        $this->db->select('ID_FAMILIAPROD, Familia, f.Activo, g.Grupo, c.Clase, f.ID_EMPRESA');
+        $this->db->from('tbl_familiaprod f');
+        $this->db->join('tbl_claseprod c', 'c.ID_CLASEPROD = f.ID_CLASEPROD');
+        $this->db->join('tbl_grupoprod g', 'f.ID_GRUPOPROD = g.ID_GRUPOPROD');
+        $where = array('c.ID_EMPRESA' => $this->session->userdata('empresa'));
+        $this->db->where($where);
+        if (count($query_array) > 0) {
+            if (strlen($query_array['Familia'])) {
+                $this->db->like('Familia', $query_array['Familia']);
+            }
         }
+        $this->db->order_by("ID_FAMILIAPROD", "asc");
+        $this->db->limit($cuantos, $inicio);
+        $result['rows'] = $this->db->get()->result();
+        
+        $this->db->select('ID_FAMILIAPROD');
+        $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
+        $this->db->where($where);
+        if (count($query_array) > 0) {
+            if (strlen($query_array['Familia'])) {
+                $this->db->like('Familia', $query_array['Familia']);
+            }
+        }
+        $tmp = $this->db->get($this->_table);
+        $result['num_rows'] = $tmp->num_rows();
+        
+        return $result;
     }
 
     /**
@@ -43,7 +54,7 @@ class Familias_Model extends CI_Model {
      * @return boolean, array Devolvemos boolean si no obtenemos resultados
      *                        y array si obtenemos resultados 
      */
-    function getFamilias() {
+    function getFamiliasTotal() {
         $this->db->select('ID_FAMILIAPROD, Familia, Activo');
         $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
         $this->db->where($where);

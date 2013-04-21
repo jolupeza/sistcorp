@@ -12,7 +12,7 @@
                 </div>
             </div>
             <!-- Fin acciones -->
-            
+
             <?php if ($this->session->flashdata('mensaje_error')) : ?>
                 <div class="alert alert-error"><p><?php echo $this->session->flashdata('mensaje_error'); ?></p></div>
             <?php endif; ?>
@@ -20,7 +20,7 @@
             <?php if ($this->session->flashdata('mensaje_exito')) : ?>
                 <div class="alert alert-success"><p><?php echo $this->session->flashdata('mensaje_exito'); ?></p></div>
             <?php endif; ?>
-                        
+
             <!-- Inicio .acciones -->
             <div class="acciones">
                 <span>B&uacute;squeda de Perfil</span>
@@ -28,12 +28,10 @@
                 echo form_open('administracion/perfil/searchPerfil', array('name' => 'frmsearch', 'class' => 'form-search'));
                 ?>
                 <div class="input-append">
-                    <?php echo form_input(array('name' => 'txtNomPerfil', 'class' => 'span7 search-query')); ?>
+                    <?php echo form_input(array('name' => 'txtNomPerfil', 'class' => 'span7 search-query', 'value' => set_value('txtNomPerfil'))); ?>
                     <button type="submit" class="btn"><i class="icon-search"></i></button>
                 </div>
-                <?php
-                echo form_close();
-                ?> 
+                <?php echo form_close(); ?> 
             </div>
             <!-- Fin .acciones -->
             <?php if (validation_errors()) : ?>
@@ -54,26 +52,22 @@
                         <td>EDITAR</td>
                         <td>ELIMINAR</td>
                     </tr>
-                    <?php
-                    foreach ($perfil as $row) {
-                        ?>
-                        <tr class="content_grid">
-                            <td class="alig_center"><?php echo $row->ID_PERFIL; ?></td>
-                            <td class="alig_left"><?php echo $row->Perfil; ?></td>
-                            <?php
-                            if ($row->Activo == '0') {
-                                $activo = 'No';
-                            } else if ($row->Activo == '1') {
-                                $activo = 'S&iacute;';
-                            }
-                            ?>
-                            <td class="alig_center"><?php echo $activo; ?></td>
-                            <td class="alig_center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idperfil="' . $row->ID_PERFIL . '" class="editPerfil" title="Editar ' . $row->Perfil . '"') ?></td>
-                            <td class="alig_center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Perfil; ?>" onclick="deleteRow('<?php echo $row->Perfil; ?>','<?php echo base_url() . 'administracion/perfil/deletePerfil/' . $row->ID_PERFIL; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
-                        </tr>
+                    <?php foreach ($perfil as $row) : ?>
+                    <tr class="content_grid">
+                        <td class="text-center"><?php echo $row->ID_PERFIL; ?></td>
+                        <td><?php echo $row->Perfil; ?></td>
                         <?php
-                    }
-                    ?>
+                        if ($row->Activo == '0') {
+                        $activo = 'No';
+                        } else if ($row->Activo == '1') {
+                        $activo = 'S&iacute;';
+                        }
+                        ?>
+                        <td class="text-center"><?php echo $activo; ?></td>
+                        <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idperfil="' . $row->ID_PERFIL . '" class="editPerfil" title="Editar ' . $row->Perfil . '"') ?></td>
+                        <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Perfil; ?>" onclick="deleteRow('<?php echo $row->Perfil; ?>', '<?php echo base_url() . 'administracion/perfil/deletePerfil/' . $row->ID_PERFIL; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
+                    </tr>
+                    <?php endforeach; ?>
                 </table>            
 
                 <?php if (isset($pag_links)) : ?>
@@ -90,13 +84,13 @@
         <!-- Fin #main -->
 
         <!-- Formulario que nos permitirá agregar un nuevo perfil -->        
-        <!-- Inicio divIngresoForm -->
-        <div class="modal hide fade" id="divIngresoForm">
+        <!-- Inicio addPerfilModal -->
+        <div class="modal hide fade" id="addPerfilModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Agregar Perfil</h3>
             </div>
-            <?php echo form_open('administracion/perfil/verifyAddPerfil', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('administracion/perfil/verifyAddPerfil', array('name' => 'frmAddPerfil', 'id' => 'frmAddPerfil', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">                
                 <div class="control-group">
                     <?php echo form_label('Perfil: *', 'txtPerfil', array('class' => 'control-label')); ?>
@@ -126,9 +120,9 @@
             <div class="modal-footer">
                 <?php
                 // Creamos el boton Cancelar
-                echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
+                echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Perfil', 'content' => 'Agregar Perfil', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Perfil', 'content' => 'Agregar Perfil'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
@@ -138,16 +132,16 @@
             </div>
             <!-- Fin div cargando -->
         </div>
-        <!-- Fin divIngresoForm -->
+        <!-- Fin addPerfilModal -->
 
         <!-- Formulario que nos permitirá editar información de perfil -->        
-        <!-- Inicio divEditForm -->
-        <div class="modal hide fade" id="divEditForm">
+        <!-- Inicio editPerfilModal -->
+        <div class="modal hide fade" id="editPerfilModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Editar Perfil</h3>                
             </div>
-            <?php echo form_open('administracion/perfil/verifyEditPerfil', array('name' => 'frm', 'id' => 'frm', 'class' => 'form-horizontal')); ?>
+            <?php echo form_open('administracion/perfil/verifyEditPerfil', array('name' => 'frmEditPerfil', 'id' => 'frmEditPerfil', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Perfil: *', 'txtPerfilEdit', array('class' => 'control-label')); ?>
@@ -182,15 +176,12 @@
                 // Creamos el boton Cancelar
                 echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
-                echo form_button(array('id' => 'btnAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Perfil', 'content' => 'Editar Perfil', 'onclick' => 'submit(this.form)'));
+                echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Perfil', 'content' => 'Editar Perfil'));
                 ?> 
             </div>
             <?php echo form_close(); ?>
-            <!-- Inicio div cargando -->
-            <div id="cargando" class="hidden"><?php echo img(base_url() . 'images/ajax-loader.gif'); ?></div>
-            <!-- Fin div cargando -->
         </div>
-        <!-- Fin divEditForm -->     
+        <!-- Fin editPerfilModal -->     
     </div>
 </div>
 <!-- Fin container -->

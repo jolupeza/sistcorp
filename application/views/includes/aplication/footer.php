@@ -19,5 +19,6 @@
         <script src="<?php echo base_url(); ?>js/<?php echo $jsLoad[$i]; ?>.js"></script>
     <?php endfor; ?>
 <?php endif; ?>
+        <script>var _root_ = '<?php echo base_url(); ?>'</script>
 </body>
 </html>

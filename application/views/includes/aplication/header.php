@@ -12,7 +12,7 @@
             <?php if ($this->session->userdata('logged_in')) : ?>
             <!-- Inicio #mnu_setting -->
             <div class="span5" id="mnu_setting">                
-                    <p>Bienvenido, <?php echo $this->session->userdata('nom_user'); ?></p>
+                    <p>Bienvenid@, <?php echo $this->session->userdata('nom_user'); ?></p>
                     <div class="btn-group">
                         <a class="btn" href="" title="Mi cuenta">Mi cuenta</a>
                         <a class="btn" href="" title="Configuraci&oacute;n">Configuraci&oacute;n</a>
