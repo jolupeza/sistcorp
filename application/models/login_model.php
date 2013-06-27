@@ -20,14 +20,13 @@ class Login_Model extends CI_Model
      * Método que permite verificar el login del usuario
      * @param string $data['Usuario']    El nombre del usuario
      * @param string $data['PWD']         El password encriptado con sha1
-     * @param string $data['PWD_JS']  El password encriptado con función js sha1
      * @return array
      */
     function login($data) 
     {
         $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, PWD, Activo, ID_EMPRESA, ID_PERFIL');
         $this->db->limit(1);
-        $query = $this->db->get_where($this->_table, array('Usuario' => $data['Usuario'], 'PWD' => $data['PWD'], 'PWD_JS' => $data['PWD_JS'], 'ID_EMPRESA' => $data['ID_EMPRESA'], 'Activo' => '1'));
+        $query = $this->db->get_where($this->_table, array('Usuario' => $data['Usuario'], 'PWD' => $data['PWD'], 'ID_EMPRESA' => $data['ID_EMPRESA'], 'Activo' => '1'));
         if ($query->num_rows() == 1) {
             return $query->row();
         }

@@ -44,6 +44,7 @@
                    ."AND o.Activo=1 AND a.Activo=1 AND r.Activo=1 AND r.ID_PERFIL=".$this->session->userdata('perfil')
                    ." AND o.ID_MODULO =".$id_modulo;
              $query = $this->db->query($sql);
+             $this->db->last_query();
              if(!$query){
                  return FALSE;
              }

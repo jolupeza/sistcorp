@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+    <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Nombre       : controllers/login.php
@@ -58,7 +58,6 @@ class Login extends CI_Controller
                 $datos = array(
                     'Usuario' => $this->input->post('username'),
                     'PWD' => $this->encrypt->sha1($this->input->post('pass')),
-                    'PWD_JS' => $this->encrypt->sha1($this->input->post('pass')),
                     'ID_EMPRESA' => $this->input->post('empresa')
                 );
                 $result = $this->Login_Model->login($datos);

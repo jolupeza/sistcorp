@@ -26,11 +26,13 @@ header{
     padding-right: .4167em;
 }
 /* Mnu_setting */
-#mnu_setting{
+#mnu_setting{    
     padding-top: .625em;
+    text-align: right;
 }
 #mnu_setting p{
     color:#FFF;
+    margin-top: .625em;
 }
 /********************** FIN HEADER ***********************/
 /*********************** LOGIN ****************************/
