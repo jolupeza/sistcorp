@@ -23,6 +23,11 @@ class Perfil extends MX_Controller
     function index($query_id = 0) 
     {
         if ($this->_is_logged_in()) {
+            if ( !$this->acl->hasPermission('perf_view') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
+            
             $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
@@ -44,7 +49,7 @@ class Perfil extends MX_Controller
             $data['num_rows'] = $results['num_rows'];
 
             if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
-                $config['base_url'] = base_url() . 'administracion/perfil/index' . $query_id;
+                $config['base_url'] = base_url() . 'administracion/perfil/index/' . $query_id;
                 $config['total_rows'] = $results['num_rows'];
                 $config['per_page'] = '10';
                 $config['uri_segment'] = '5';
@@ -231,6 +236,119 @@ class Perfil extends MX_Controller
             redirect('administracion/perfil/index/' . $query_id);
             
         }
+    }
+    
+    /**
+     * Cargamos los permisos asignados a un perfil específico
+     * @access      public
+     */
+    public function permisosPerfil()
+    {
+        if ($this->_is_logged_in()) {            
+            if ( !$this->acl->hasPermission('perf_view') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
+            
+            $idPerfil = $this->uri->segment(4);
+            $datos = $this->Perfil_Model->getPerfilByID($idPerfil);
+            $data['perfil'] = $datos->Perfil;
+            
+            $limit = 20;
+            $mod = $this->Modulos_Model->getModulos();
+            if (is_array($mod)) {
+                $data['modulos'] = $mod;
+            }
+            
+            $this->load->model('Acciones_Model');
+               
+            $result = $this->Acciones_Model->getPermsRole($idPerfil);
+            $data['num_rows'] = count($result);
+            $data['permisos'] = array_slice($this->Acciones_Model->getPermsRole($idPerfil), $this->uri->segment(5), $limit);
+            
+            
+            if (is_numeric($data['num_rows']) && $data['num_rows'] > 0) {
+                $config['base_url'] = base_url() . 'administracion/perfil/permisosPerfil/' . $idPerfil;
+                $config['total_rows'] = $data['num_rows'];
+                $config['per_page'] = $limit;
+                $config['uri_segment'] = '5';
+                $this->pagination->initialize($config);
+                $data['pag_links'] = $this->pagination->create_links();
+            }
+            $this->load->helper(array('funciones_helper'));
+            $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
+            $data['cssLoad'] = array('jquery.alerts');
+            $data['jsLoad'] = array('funciones', 'validate', 'jquery.alerts', 'perfil/funciones');
+            $data['title'] = 'SISTCORP - Administraci&oacute;n de Permisos del Perfil ' . $data['perfil'];
+            $data['subtitle'] = 'Administraci&oacute;n de Permisos del Perfil ' . $data['perfil'];
+            $data['main_content'] = 'permisosPerfil';
+            $this->load->view('includes/aplication/template', $data);
+        }
+    }
+    
+    public function editPermisos()
+    {
+        if ($this->_is_logged_in()) {            
+            if ( !$this->acl->hasPermission('perm_edit_all') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
+            
+            $values = array_keys($_POST);
+            $id = $this->input->post('ID_PERFIL');
+            $replace = array();
+            $eliminar = array();
+            for ($i = 0; $i < count($values); $i++) {
+                if (substr($values[$i], 0, 5) == 'perm_') {
+                    // Permite verificar que el id del permiso tenga dos dígitos
+                    if (strstr(substr($values[$i], -2), '_')) {
+                        $id_permiso = substr($values[$i], -1);
+                    } else {
+                        $id_permiso = substr($values[$i], -2);
+                    }
+
+                    if ($this->input->post($values[$i]) == 'x') {
+                        $eliminar[] = array(
+                            'perfil' => $id,
+                            'permiso' => $id_permiso
+                        );
+                    } else {
+                        if ($this->input->post($values[$i]) == 1) {
+                            $v = 1;
+                        } else {
+                            $v = 0;
+                        }
+                        $replace[] = array(
+                            'perfil' => $id,
+                            'permiso' => $id_permiso,
+                            'valor' => $v
+                        );
+                    }
+                }
+            }
+            
+            $this->load->model('Acciones_Model');
+            
+            if ( !$this->acl->hasPermission('perm_del_all') and count($eliminar) ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para eliminar permisos del perfil.');
+                redirect('administracion/perfil/permisosPerfil/' . $id);
+            } else {
+                for ($i = 0; $i < count($eliminar); $i++) {
+                    $this->Acciones_Model->eliminarPermisoPerfil($eliminar[$i]['perfil'], $eliminar[$i]['permiso']);
+                }
+            }
+            
+            if ( !$this->acl->hasPermission('perm_edit_all') and count($replace)) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para editar los permisos del perfil.');
+                redirect('administracion/perfil/permisosPerfil/' . $id);
+            } else {
+                for ($i = 0; $i < count($replace); $i++) {
+                    $this->Acciones_Model->editarPermisoPerfil($replace[$i]['perfil'], $replace[$i]['permiso'], $replace[$i]['valor']);
+                }
+            }            
+        }
+        $this->session->set_flashdata('mensaje_exito', 'Se realizaron los cambios correctamente.');
+        redirect('administracion/perfil/permisosPerfil/' . $id);
     }
 
     /**

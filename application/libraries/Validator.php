@@ -16,10 +16,10 @@ class Validator
         $this->ci = & get_instance();
     }
 
-    // soporte validación AJAX , verifica un valor simple
+    // soporte validación AJAX, verifica un valor simple
     public function validateAJAX($inputValue, $fieldID) 
     {
-        // comprueba que campo est� siendo validado y ejecuta la validaci�n
+        // comprueba que campo está siendo validado y ejecuta la validación
         switch ($fieldID) {
             // Comprueba si hemos ingresado valor al campo
             case 'txtNomUser':
@@ -38,6 +38,8 @@ class Validator
             case 'txtProducto':
             case 'txtProductoEdit':
             case 'txtEditMarca':
+            case 'txtPermisoEdit':
+            case 'txtKeyEdit':
                 return $this->validateRequired($inputValue);
                 break;
 
@@ -59,6 +61,16 @@ class Validator
             // Comprueba si ha repetido el password 
             case 'txtRePassword':
                 return $this->validateRepassword($inputValue);
+                break;
+            
+            // Comprueba si ingresado el nombre del permiso se ha ingresado y si este existe
+            case 'txtPermiso':
+                return $this->validatePermiso($inputValue);
+                break;
+            
+            // Comprueba si ingresado el key del permiso se ha ingresado y si este existe
+            case 'txtKey':
+                return $this->validateKey($inputValue);
                 break;
 
             // Comprueba si ha seleccionado item de select
@@ -211,6 +223,32 @@ class Validator
         } else {
             return 1;
         }
+    }
+    
+    // Validamos que se haya ingresado el permiso y que este no este registrado
+    private function validatePermiso($value) 
+    {
+        // nombre de usuario vacío no es válido
+        $value = trim($value);
+        if ($value == null)
+            return 0; // no válido
+        // comprueba si el nombre de usuario existe en la base de datos
+        $this->ci->load->model('Acciones_Model');
+        $result = $this->ci->Acciones_Model->verifyPermiso($value);
+        return $result;
+    }
+    
+    // Validamos que se haya ingresado el key del permiso y que este no este registrado
+    private function validateKey($value) 
+    {
+        // nombre de usuario vacío no es válido
+        $value = trim($value);
+        if ($value == null)
+            return 0; // no válido
+        // comprueba si el nombre de usuario existe en la base de datos
+        $this->ci->load->model('Acciones_Model');
+        $result = $this->ci->Acciones_Model->verifyKey($value);
+        return $result;
     }
 
     // Validamos que se haya seleccionado

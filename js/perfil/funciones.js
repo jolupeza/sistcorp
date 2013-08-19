@@ -45,4 +45,9 @@ $(document).on("ready", function() {
             $("form#frmEditPerfil").submit();
         }
     });
+    
+    $("#btnGuardar").on("click", function(event) {
+        event.preventDefault();
+        $("form#frmPermisosPerfil").submit();
+    });    
 });

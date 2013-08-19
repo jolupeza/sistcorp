@@ -49,6 +49,7 @@
                         <td>ID</td>
                         <td>PERFIL</td>
                         <td>ACTIVO</td>
+                        <td>PERMISOS</td>
                         <td>EDITAR</td>
                         <td>ELIMINAR</td>
                     </tr>
@@ -64,6 +65,7 @@
                         }
                         ?>
                         <td class="text-center"><?php echo $activo; ?></td>
+                        <td class="text-center"><?php echo anchor('administracion/perfil/permisosPerfil/' . $row->ID_PERFIL, img(base_url() . 'images/permisos.png'), array('class' => 'editPermisos', 'title' => 'Editar Permisos de ' . $row->Perfil)); ?></td>
                         <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idperfil="' . $row->ID_PERFIL . '" class="editPerfil" title="Editar ' . $row->Perfil . '"') ?></td>
                         <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Perfil; ?>" onclick="deleteRow('<?php echo $row->Perfil; ?>', '<?php echo base_url() . 'administracion/perfil/deletePerfil/' . $row->ID_PERFIL; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
                     </tr>

@@ -21,7 +21,8 @@
                    ."FROM tbl_modulos m, tbl_opciones o, tbl_accion a, tbl_rel_perf_accion r "
                    ."WHERE m.ID_MODULO = o.ID_MODULO AND o.ID_OPCION = a.ID_OPCION "
                    ."AND a.ID_ACCION = r.ID_ACCION AND o.Activo=1 AND a.Activo=1 "
-                   ."AND r.Activo=1 AND r.ID_PERFIL=".$this->session->userdata('perfil');
+                   ."AND r.Activo=1 AND m.ID_EMPRESA = " . $this->session->userdata('empresa') 
+                   ." AND r.ID_PERFIL=".$this->session->userdata('perfil');
              $query = $this->db->query($sql);
              if(!$query){
                  return FALSE;
@@ -41,10 +42,10 @@
              $sql = "SELECT distinct o.ID_OPCION, Opcion, URL, o.ID_MODULO, o.ID_OPCION_REF "
                    ."FROM tbl_modulos m, tbl_opciones o, tbl_accion a, tbl_rel_perf_accion r "
                    ."WHERE m.ID_MODULO = o.ID_MODULO AND o.ID_OPCION = a.ID_OPCION AND a.ID_ACCION=r.ID_ACCION "
-                   ."AND o.Activo=1 AND a.Activo=1 AND r.Activo=1 AND r.ID_PERFIL=".$this->session->userdata('perfil')
+                   ."AND o.Activo=1 AND a.Activo=1 AND r.Activo=1 AND o.ID_EMPRESA = " . $this->session->userdata('empresa') 
+                   ." AND r.ID_PERFIL=".$this->session->userdata('perfil')
                    ." AND o.ID_MODULO =".$id_modulo;
              $query = $this->db->query($sql);
-             $this->db->last_query();
              if(!$query){
                  return FALSE;
              }

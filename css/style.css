@@ -90,6 +90,7 @@ nav{
 /*********************FIN MENU ***************************/
 /********************* SUBMENU **************************/
 #submenu{
+    margin-bottom: 2em;
     margin-top: .625em;
 }
 .acciones{
@@ -136,6 +137,7 @@ nav{
 /************************* MAIN **************************/
 #main{
     margin-top: .625em;
+    margin-bottom: 2em;
 }
 #main .thumbnail{
     text-align:center;    
