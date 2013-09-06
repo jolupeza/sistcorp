@@ -80,7 +80,7 @@ $autoload['helper'] = array('url','html','date');
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('config_app');
 
 
 /*

@@ -5,10 +5,10 @@
  * Descripción  : Controlador que se encargará de realizar la verificación del logueo del usuario y de cerrar la sesión.
  * @author Ing. José Pérez
  */
-class Login extends CI_Controller 
+class Login extends CI_Controller
 {
 
-    function __construct() 
+    function __construct()
     {
         parent::__construct();
         $this->load->helper('form');
@@ -16,11 +16,11 @@ class Login extends CI_Controller
     }
 
     /**
-     * Se encargará de cargar la vista principal para el control de 
+     * Se encargará de cargar la vista principal para el control de
      * usuarios
      * @access     public
      */
-    function index() 
+    function index()
     {
         if (!$this->_is_logged_in()) {
             $this->load->model('Empresas_Model');
@@ -32,7 +32,7 @@ class Login extends CI_Controller
             $data['jsLoad'] = array('login/funciones');
             $data['main_content'] = 'login/index';
             $data['title'] = 'SISTCORP - Login';
-            $this->load->view('includes/aplication/template.php', $data);
+            $this->load->view('themes/admin/template.php', $data);
         }
     }
 
@@ -40,7 +40,7 @@ class Login extends CI_Controller
      * Se encargará de recibir los datos del formulario de login
      * @access     public
      */
-    function verifyLogin() 
+    function verifyLogin()
     {
         // Verificamos que ya estemos registrados y accesos indeseados
         if (!$this->_is_logged_in()) {
@@ -84,9 +84,9 @@ class Login extends CI_Controller
      * Verificar que se haya seleccionado la empresa
      * @access      private
      * @param      int          $value      El valor de empresa seleccionada
-     * @return      bool       
+     * @return      bool
      */
-    function _verifySelect($value) 
+    function _verifySelect($value)
     {
         if (!isset($value) or $value == '') {
             return FALSE;
@@ -95,11 +95,11 @@ class Login extends CI_Controller
     }
 
     /**
-     * Método para confirmar el registro del nuevo usuario 
+     * Método para confirmar el registro del nuevo usuario
      * @access     public
      * @param      String      Código de activación
      */
-    function register_confirm($code = NULL, $id = NULL) 
+    function register_confirm($code = NULL, $id = NULL)
     {
         if ($this->_is_logged_in()) {
             $this->session->set_flashdata('mensaje_error', 'Usted se encuentra logueado y no puede activar una cuenta.');
@@ -118,19 +118,19 @@ class Login extends CI_Controller
         }
     }
 
-    function _verifyAcount($veri = FALSE) 
+    function _verifyAcount($veri = FALSE)
     {
         $data['title'] = 'SISTCORP - Verificaci&oacute;n de cuenta';
         $data['subtitle'] = 'Activaci&oacute;n de cuenta';
         $data['main_content'] = ($veri) ? 'login/verifyOk' : 'login/verifyNoOk';
-        $this->load->view('includes/aplication/template', $data);
+        $this->load->view('themes/admin/template.php', $data);
     }
 
     /**
      * Se encargará cerrar la sesión del usuario
      * @access     public
      */
-    function logout() 
+    function logout()
     {
         if ($this->session->userdata('logged_in')) {
             $this->session->sess_destroy();
@@ -143,7 +143,7 @@ class Login extends CI_Controller
      * @access     private
      * @return     boolean     Si no estamos logueados devolverá FALSE
      */
-    function _is_logged_in() 
+    function _is_logged_in()
     {
         $is_logged_in = $this->session->userdata('logged_in');
         if (!isset($is_logged_in) || $is_logged_in == FALSE) {

@@ -1,5 +1,5 @@
 <!-- Inicio container -->
-<div class="container-fluid">    
+<div class="container-fluid">
     <div class="row-fluid">
         <!-- Inicio #submenu -->
         <aside class="span3" id="submenu">
@@ -21,22 +21,22 @@
         <!-- Fin submenu -->
 
         <!-- Inicio #main -->
-        <section class="span9" id="main">          
+        <section class="span9" id="main">
             <ul class="thumbnails">
                 <li class="span2">
-                    <?php echo anchor(site_url() . 'administracion/usuarios', img(array('src' => base_url() . 'images/user.png', 'alt' => 'Usuarios')) . 'Usuarios', 'title="Usuarios" class="thumbnail"') ?>
+                    <?php echo anchor(site_url() . 'administracion/usuarios', img(array('src' => base_url() . 'assets/admin/tpl_itproyecta/img/user.png', 'alt' => 'Usuarios')) . 'Usuarios', 'title="Usuarios" class="thumbnail"') ?>
                 </li>
                 <li class="span2">
-                    <?php echo anchor(site_url() . 'almacen/productos', img(array('src' => base_url() . 'images/products.png', 'alt' => 'Productos')) . 'Productos', 'title="Productos" class="thumbnail"') ?>
+                    <?php echo anchor(site_url() . 'almacen/productos', img(array('src' => base_url() . 'assets/admin/tpl_itproyecta/img/products.png', 'alt' => 'Productos')) . 'Productos', 'title="Productos" class="thumbnail"') ?>
                 </li>
                 <li class="span2">
-                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'images/proveedor.png', 'alt' => 'Proveedores')) . 'Proveedores', 'title="Proveedores" class="thumbnail"') ?>
+                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'assets/admin/tpl_itproyecta/img/proveedor.png', 'alt' => 'Proveedores')) . 'Proveedores', 'title="Proveedores" class="thumbnail"') ?>
                 </li>
                 <li class="span2">
-                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'images/clientes.png', 'alt' => 'Clientes')) . 'Clientes', 'title="Clientes" class="thumbnail"') ?>
+                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'assets/admin/tpl_itproyecta/img/clientes.png', 'alt' => 'Clientes')) . 'Clientes', 'title="Clientes" class="thumbnail"') ?>
                 </li>
                 <li class="span2">
-                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'images/facturacion.png', 'alt' => 'Facturaci&oacute;n')) . 'Facturaci&oacute;n', 'title="Facturaci&oacute;n" class="thumbnail"') ?>
+                    <?php echo anchor(site_url() . 'seguridad/usuarios', img(array('src' => base_url() . 'assets/admin/tpl_itproyecta/img/facturacion.png', 'alt' => 'Facturaci&oacute;n')) . 'Facturaci&oacute;n', 'title="Facturaci&oacute;n" class="thumbnail"') ?>
                 </li>
             </ul>
         </section>

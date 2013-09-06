@@ -26,7 +26,7 @@ class Dashboard extends CI_Controller {
       $data['active'] = 'Dashboard';
       $data['title'] = 'SISTCORP - Dashboard';
       $data['main_content'] = 'dashboard/index';
-      $this->load->view('includes/aplication/template', $data);
+      $this->load->view('themes/admin/template.php', $data);
     }
   }
 

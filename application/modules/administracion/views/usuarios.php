@@ -1,13 +1,15 @@
 <!-- Inicio container -->
-<div class="container-fluid">    
+<div class="container-fluid">
     <div class="row-fluid">
         <!-- Inicio #submenu -->
         <aside class="span3" id="submenu">
             <!-- Inicio acciones -->
             <div class="acciones">
                 <span>Acciones</span>
-                <div id="opciones">                        
-                    <a href="javascript:void(0);" id="addUser" title="Agregar Usuario"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>                    
+                <div id="opciones">
+                <?php if ($this->acl->hasPermission('user_add')) : ?>
+                    <a href="javascript:void(0);" id="addUser" title="Agregar Usuario"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>
+                <?php endif; ?>
                     <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'images/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
                 </div>
             </div>
@@ -33,7 +35,7 @@
                 <label class="radio inline"><?php echo form_radio('rbtText', 'Nombres'); ?>Nombres</label>
                 <label class="radio inline"><?php echo form_radio('rbtText', 'Apaterno'); ?>A. Paterno</label>
                 <label class="radio inline"><?php echo form_radio('rbtText', 'Amaterno'); ?>A. Materno</label>
-                <?php echo form_close(); ?> 
+                <?php echo form_close(); ?>
                 <p class="text-info"><small>Si no selecciona ninguna opci&oacute;n se buscar&aacute; en todos los campos.</small></p>
             </div>
             <!-- Fin .acciones -->
@@ -45,40 +47,50 @@
 
         <!-- Inicio #main -->
         <section class="span9" id="main">
-            <h3><?php echo $subtitle; ?></h3>  
+            <h3><?php echo $subtitle; ?></h3>
             <?php if (isset($users) && count($users) > 0) : ?>
                 <table class="container_grid">
                     <tr class="header_grid">
                         <td>ID</td>
                         <td>USUARIO</td>
                         <td>NOMBRE</td>
-                        <td>SEXO</td>
                         <td>EMAIL</td>
                         <td>PERFIL</td>
                         <td>ACTIVO</td>
+                    <?php if($this->acl->hasPermission('perm_view')) : ?>
+                        <td>PERMISOS</td>
+                    <?php endif; ?>
+                    <?php if($this->acl->hasPermission('user_edit_all')) : ?>
                         <td>EDITAR</td>
+                    <?php endif; ?>
+                    <?php if($this->acl->hasPermission('use_del_all')) : ?>
                         <td>ELIMINAR</td>
+                    <?php endif; ?>
                     </tr>
                     <?php foreach ($users as $row) : ?>
                         <tr class="content_grid">
                             <td class="text-center"><?php echo $row->ID_USUARIO; ?></td>
                             <td><?php echo $row->Usuario; ?></td>
                             <td><?php echo $row->Nombres . ' ' . $row->Ape_Paterno . ' ' . $row->Ape_Materno; ?></td>
-                            <td><?php $sexo = ($row->Sexo == 'M') ? 'Masculino' : 'Femenino';
-                echo $sexo; ?></td>
                             <td><?php echo $row->Email; ?></td>
                             <td><?php echo $row->PERFIL; ?></td>
-                            <td class="text-center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No';
-                echo $activo; ?></td>
+                            <td class="text-center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No';echo $activo; ?></td>
+                        <?php if($this->acl->hasPermission('perm_view')) : ?>
+                            <td class="text-center"><?php echo anchor('administracion/usuarios/permisosUser/' . $row->ID_USUARIO, img(base_url() . 'images/permisos.png'), 'title="Ver permisos de ' . $row->Usuario . '"') ?></td>
+                        <?php endif; ?>
+                        <?php if($this->acl->hasPermission('user_edit_all')) : ?>
                             <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-iduser="' . $row->ID_USUARIO . '" class="editUser" title="Editar ' . $row->Usuario . '"') ?></td>
+                        <?php endif; ?>
+                        <?php if($this->acl->hasPermission('use_del_all')) : ?>
                             <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Usuario; ?>" onclick="deleteRow('<?php echo $row->Usuario; ?>', '<?php echo base_url() . 'administracion/usuarios/deleteUser/' . $row->ID_USUARIO; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
+                        <?php endif; ?>
                         </tr>
                 <?php endforeach; ?>
-                </table>            
+                </table>
                     <?php if (isset($pag_links)) : ?>
                     <ul id="pagination">
                     <?php echo $pag_links; ?>
-                    </ul> 
+                    </ul>
     <?php endif; ?>
 <?php else : ?>
                 <div class="alert alig_center">
@@ -88,7 +100,7 @@
         </section>
         <!-- Fin #main -->
 
-        <!-- Formulario que nos permitirá agregar un nuevo usuario -->        
+        <!-- Formulario que nos permitirá agregar un nuevo usuario -->
         <!-- Inicio addUserModal -->
         <div class="modal hide fade" id="addUserModal">
             <div class="modal-header">
@@ -188,7 +200,7 @@
                     </label>
                     <label class="radio inline">
                         <input type="radio" name="rbtSexo" value="F">Femenino
-                    </label>        
+                    </label>
                 </div>
                 <div class="control-group">
                     <?php
@@ -233,18 +245,18 @@
                 <?php
                 echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary addUser', 'value' => 'Agregar Usuario', 'content' => 'Agregar Usuario'));
-                ?> 
+                ?>
             </div>
 <?php echo form_close(); ?>
         </div>
         <!-- Fin addUserModal -->
 
-        <!-- Formulario que nos permitirá editar información de un usuario -->        
+        <!-- Formulario que nos permitirá editar información de un usuario -->
         <!-- Inicio editUserModal -->
         <div class="modal hide fade" id="editUserModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
-                <h3>Editar Usuario</h3>                
+                <h3>Editar Usuario</h3>
             </div>
             <div class="modal-body">
                     <?php echo form_open('administracion/usuarios/verifyEditUser', array('name' => 'frmEditUser', 'id' => 'frmEditUser', 'class' => 'form-horizontal')); ?>
@@ -304,14 +316,14 @@
 <?php echo form_input($username); ?>
                         <div id="txtEditUsernameFailed" class="hidden"></div>
                     </div>
-                </div>               
+                </div>
                 <div class="alig_center control-group">
                     <label class="radio inline">
                         <input type="radio" name="rbtSexo" value="M">Masculino
                     </label>
                     <label class="radio inline">
                         <input type="radio" name="rbtSexo" value="F">Femenino
-                    </label>        
+                    </label>
                 </div>
                 <div class="control-group">
                     <?php
@@ -372,7 +384,7 @@
                 // Creamos el boton Agregar Perfil
                 echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Usuario', 'content' => 'Editar Usuario'));
                 echo form_close();
-                ?> 
+                ?>
             </div>
         </div>
         <!-- Fin divEditForm -->

@@ -1,13 +1,15 @@
 <!-- Inicio container -->
-<div class="container-fluid">    
+<div class="container-fluid">
     <div class="row-fluid">
         <!-- Inicio #submenu -->
         <aside class="span3" id="submenu">
             <!-- Inicio acciones -->
             <div class="acciones">
                 <span>Acciones</span>
-                <div id="opciones">                        
+                <div id="opciones">
+                <?php if ( $this->acl->hasPermission('perm_add') ) : ?>
                     <a href="javascript:void(0);" id="addPermiso" title="Agregar Permiso"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>
+                <?php endif; ?>
                     <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'images/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
                 </div>
             </div>
@@ -31,7 +33,7 @@
                     <?php echo form_input(array('name' => 'txtSearchAccion', 'class' => 'span7 search-query', 'value' => set_value('txtSearchAccion'))); ?>
                     <button type="submit" class="btn"><i class="icon-search"></i></button>
                 </div>
-                <?php echo form_close(); ?> 
+                <?php echo form_close(); ?>
             </div>
             <!-- Fin .acciones -->
             <?php if (validation_errors()) : ?>
@@ -42,7 +44,7 @@
 
         <!-- Inicio #main -->
         <section class="span9" id="main">
-            <h3><?php echo $subtitle; ?></h3>  
+            <h3><?php echo $subtitle; ?></h3>
             <?php if (isset($acciones) && count($acciones) > 0) : ?>
                 <table class="container_grid">
                     <tr class="header_grid">
@@ -50,8 +52,12 @@
                         <td>PERMISO</td>
                         <td>KEY</td>
                         <td>ACTIVO</td>
+                    <?php if ( $this->acl->hasPermission('perm_edit_all') ) : ?>
                         <td>EDITAR</td>
+                    <?php endif; ?>
+                    <?php if ( $this->acl->hasPermission('perm_del_all') ) : ?>
                         <td>ELIMINAR</td>
+                    <?php endif; ?>
                     </tr>
                     <?php foreach ($acciones as $row) : ?>
                     <tr class="content_grid">
@@ -66,16 +72,20 @@
                         }
                         ?>
                         <td class="text-center"><?php echo $activo; ?></td>
+                    <?php if ( $this->acl->hasPermission('perm_edit_all') ) : ?>
                         <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idaccion="' . $row->ID_ACCION . '" class="editAccion" title="Editar ' . $row->Accion . '"') ?></td>
+                    <?php endif; ?>
+                    <?php if ( $this->acl->hasPermission('perm_del_all') ) : ?>
                         <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Accion; ?>" onclick="deleteRow('<?php echo $row->Accion; ?>', '<?php echo base_url() . 'administracion/acciones/deletePermiso/' . $row->ID_ACCION; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
+                    <?php endif; ?>
                     </tr>
                     <?php endforeach; ?>
-                </table>            
+                </table>
 
                 <?php if (isset($pag_links)) : ?>
                     <ul id="pagination">
                         <?php echo $pag_links; ?>
-                    </ul> 
+                    </ul>
                 <?php endif; ?>
             <?php else : ?>
                 <div class="alert alig_center">
@@ -85,7 +95,7 @@
         </section>
         <!-- Fin #main -->
 
-        <!-- Formulario que nos permitirá agregar un nuevo perfil -->        
+        <!-- Formulario que nos permitirá agregar un nuevo perfil -->
         <!-- Inicio addPerfilModal -->
         <div class="modal hide fade" id="addPermisoModal">
             <div class="modal-header">
@@ -93,7 +103,7 @@
                 <h3>Agregar Permiso</h3>
             </div>
             <?php echo form_open('administracion/acciones/verifyAddPermiso', array('name' => 'frmAddPermiso', 'id' => 'frmAddPermiso', 'class' => 'form-horizontal')); ?>
-            <div class="modal-body">                
+            <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Permiso: *', 'txtPermiso', array('class' => 'control-label')); ?>
                     <div class="controls">
@@ -153,18 +163,18 @@
                 echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
                 echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Permiso', 'content' => 'Agregar Permiso'));
-                ?> 
+                ?>
             </div>
             <?php echo form_close(); ?>
         </div>
         <!-- Fin addPerfilModal -->
 
-        <!-- Formulario que nos permitirá editar información de perfil -->        
+        <!-- Formulario que nos permitirá editar información de perfil -->
         <!-- Inicio editPerfilModal -->
         <div class="modal hide fade" id="editPermisoModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
-                <h3>Editar Permiso</h3>                
+                <h3>Editar Permiso</h3>
             </div>
             <?php echo form_open('administracion/acciones/verifyEditPermiso', array('name' => 'frmEditPermiso', 'id' => 'frmEditPermiso', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
@@ -181,7 +191,7 @@
                         ?>
                         <div id="txtPermisoEditFailed" class="hidden"></div>
                     </div>
-                </div>                
+                </div>
                 <div class="control-group">
                     <?php echo form_label('Key: *', 'txtKeyEdit', array('class' => 'control-label')); ?>
                     <div class="controls">
@@ -195,7 +205,7 @@
                         ?>
                         <div id="txtKeyEditFailed" class="hidden"></div>
                     </div>
-                </div>   
+                </div>
                 <div class="control-group">
                     <?php echo form_label('Opción: ', 'ddlOpcion', array('class' => 'control-label')); ?>
                     <div class="controls">
@@ -231,11 +241,11 @@
                 echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
                 echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Permiso', 'content' => 'Editar Permiso'));
-                ?> 
+                ?>
             </div>
             <?php echo form_close(); ?>
         </div>
-        <!-- Fin editPerfilModal -->     
+        <!-- Fin editPerfilModal -->
     </div>
 </div>
 <!-- Fin container -->

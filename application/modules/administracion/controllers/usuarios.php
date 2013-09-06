@@ -5,10 +5,10 @@
  * Descripción  : Controlador que se encargará de administrar los usuarios.
  * @author Ing. José Pérez
  */
-class Usuarios extends MX_Controller 
+class Usuarios extends MX_Controller
 {
 
-    function __construct() 
+    function __construct()
     {
         parent::__construct();
         $this->load->model('Usuarios_Model');
@@ -21,15 +21,20 @@ class Usuarios extends MX_Controller
     /**
      * Nos cargará la vista por defecto del controlador perfil
      */
-    function index($query_id = 0) 
+    function index($query_id = 0)
     {
         if ($this->_is_logged_in()) {
+            if ( !$this->acl->hasPermission('user_view') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
+
             $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
-            
+
             $query_array = array();
             if ($query_id > 0) {
                 $this->input->load_query($query_id);
@@ -45,7 +50,7 @@ class Usuarios extends MX_Controller
             $data['users'] = $results['rows'];
             $data['query_id'] = $query_id;
             $data['num_rows'] = $results['num_rows'];
-            
+
             if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
                 $config['base_url'] = base_url() . 'administracion/usuarios/index/' . $query_id;
                 $config['total_rows'] = $results['num_rows'];
@@ -60,7 +65,7 @@ class Usuarios extends MX_Controller
             if (is_array($perfiles)) {
                 $data['perfiles'] = $perfiles;
             }
-            
+
             $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
@@ -75,7 +80,7 @@ class Usuarios extends MX_Controller
     /**
      * Función para validar a través de Ajax
      */
-    function validateUserAjax() 
+    function validateUserAjax()
     {
         $this->load->library('validator');
         $response =
@@ -97,9 +102,9 @@ class Usuarios extends MX_Controller
 
     /**
      *  Nos permitirá enviar email para validación de usuario.
-     * @access      private 
+     * @access      private
      */
-    function _sendEmail($to, $code, $id_user) 
+    function _sendEmail($to, $code, $id_user)
     {
         // Enviamos correo al nuevo usuario para que active su cuenta
         $this->email->from('jolupeza@hotmail.com', 'SISTCORP');
@@ -113,12 +118,16 @@ class Usuarios extends MX_Controller
 
     /**
      * Realizará validaciones del lado del servidor y si todo esta correcto
-     * ingresará el nuevo registro a la base de datos. 
+     * ingresará el nuevo registro a la base de datos.
      * @access     public
      */
-    function verifyAddUser() 
+    function verifyAddUser()
     {
         if ($this->_is_logged_in()) {
+            if ( !$this->acl->hasPermission('user_add') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
             $this->form_validation->set_rules('txtNomUser', 'Nombre', 'trim|required');
             $this->form_validation->set_rules('txtApePaterno', 'A. Paterno', 'trim|required');
             $this->form_validation->set_rules('txtApeMaterno', 'A. Materno', 'trim|required');
@@ -171,7 +180,7 @@ class Usuarios extends MX_Controller
      * @param  String  $value
      * @return Boolean
      */
-    function _verifySelect($value) 
+    function _verifySelect($value)
     {
         if ($value == '0') {
             return FALSE;
@@ -185,7 +194,7 @@ class Usuarios extends MX_Controller
      * @param  String  $email
      * @return Boolean
      */
-    function _verifyExistEmail($value) 
+    function _verifyExistEmail($value)
     {
         $result = $this->Usuarios_Model->verifyEmail($value);
         if ($result) {
@@ -200,7 +209,7 @@ class Usuarios extends MX_Controller
      * @param  String  $username
      * @return Boolean
      */
-    function _verifyExistUser($value) 
+    function _verifyExistUser($value)
     {
         $result = $this->Usuarios_Model->getUserByUsername($value);
         if ($result) {
@@ -211,13 +220,13 @@ class Usuarios extends MX_Controller
     }
 
     /**
-     * Método que generará un código aleatorio para la confirmación del 
+     * Método que generará un código aleatorio para la confirmación del
      * registro del usuario
      * @access     private
      * @param      $length     Tamaño del código aleatorio
      * @return     String      Código aleatorio
      */
-    function _random_string($length) 
+    function _random_string($length)
     {
         $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*-+';
         $max = strlen($base) - 1;
@@ -232,7 +241,7 @@ class Usuarios extends MX_Controller
      * Método que permitirá editar al usuario seleccionado
      * @access     public
      */
-    function getUser() 
+    function getUser()
     {
         if ($this->_is_logged_in()) {
             $result = $this->Usuarios_Model->getUserByID($this->input->post('iduser'));
@@ -243,13 +252,17 @@ class Usuarios extends MX_Controller
     }
 
     /**
-     * Se encargará de validar que se haya ingresado correctamente los 
-     * valores para editar. 
+     * Se encargará de validar que se haya ingresado correctamente los
+     * valores para editar.
      * @access     public
      */
-    function verifyEditUser() 
+    function verifyEditUser()
     {
         if ($this->_is_logged_in()) {
+            if ( !$this->acl->hasPermission('user_edit_all') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
             $this->form_validation->set_rules('txtNomUserEdit', 'Nombre', 'trim|required');
             $this->form_validation->set_rules('txtApePaternoEdit', 'A. Paterno', 'trim|required');
             $this->form_validation->set_rules('txtApeMaternoEdit', 'A. Materno', 'trim|required');
@@ -341,7 +354,7 @@ class Usuarios extends MX_Controller
      * como parámetro
      * @access     public
      */
-    function deleteUser() 
+    function deleteUser()
     {
         if (!$this->Usuarios_Model->deleteUser($this->uri->segment(4))) {
             $this->session->set_flashdata('mensaje_error', 'No se pudo eliminar al usuario. Por favor vuelva a intentarlo.');
@@ -355,7 +368,7 @@ class Usuarios extends MX_Controller
      * Función que permitirá buscar un determinado perfil
      * @access     public
      */
-    function searchUser() 
+    function searchUser()
     {
         if ($this->_is_logged_in()) {
             if ($this->input->post('txtUser') != '') {
@@ -372,6 +385,118 @@ class Usuarios extends MX_Controller
             } else {
                 redirect('administracion/usuarios/index');
             }
+        }
+    }
+
+    public function permisosUser($userID = false)
+    {
+        if ($this->_is_logged_in()) {
+            if ( !$this->acl->hasPermission('perm_view') ) {
+                $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
+                redirect('/dashboard/');
+            }
+            $limit = 10;
+            $mod = $this->Modulos_Model->getModulos();
+            if (is_array($mod)) {
+                $data['modulos'] = $mod;
+            }
+
+            if ($userID) {
+                $id = (int) $userID;
+            } else {
+                $id = $this->input->post('id_user');
+            }
+
+            if ($id <= 0) redirect('/dashboard/');
+
+            if ($this->input->post('guardar') == 1) {
+                $values = array_keys($this->input->post());
+                $replace = array();
+                $eliminar = array();
+
+                for ($i = 0; $i < count($values); $i++) {
+                    if (substr($values[$i], 0, 5) == 'perm_') {
+                        if (strstr(substr($values[$i], -2), '_')) {
+                            $id_permiso = substr($values[$i], -1);
+                        } else {
+                            $id_permiso = substr($values[$i], -2);
+                        }
+                        if ($this->input->post($values[$i]) == 'x') {
+                            $eliminar[] = array(
+                                'userID' => $id,
+                                'id_permiso' => $id_permiso
+                            );
+                        } else {
+                            if ($this->input->post($values[$i]) == 1) {
+                                $v = 1;
+                            } else {
+                                $v = 0;
+                            }
+                            $replace[] = array(
+                                'userID' => $id,
+                                'id_permiso' => $id_permiso,
+                                'valor' => $v
+                            );
+                        }
+                    }
+                }
+
+                echo '<pre>';
+                var_dump($replace);
+                var_dump($eliminar);
+                echo '</pre>';
+                exit;
+
+                for ($i = 0; $i < count($eliminar); $i++) {
+                    $this->Usuarios_Model->eliminarPermiso($eliminar[$i]['userID'], $eliminar[$i]['id_permiso']);
+                }
+
+                for ($i = 0; $i < count($replace); $i++) {
+                    $this->Usuarios_Model->editarPermiso($replace[$i]['userID'], $replace[$i]['id_permiso'], $replace[$i]['valor']);
+                }
+            }
+
+            $permisosUsuario = $this->Usuarios_Model->getPermisosUsuario($userID);
+            var_dump($permisosUsuario); exit;
+
+            $permisosRole = $this->Usuarios_Model->getPermisosRole($id);
+
+            if (!$permisosUsuario || !$permisosRole) {
+                redirect('/administracion/usuarios/');
+            }
+
+            $data['num_rows'] = count($permisosUsuario);
+            $data['permisos'] = array_slice(array_keys($permisosUsuario), $this->uri->segment(5), $limit);
+            $data['usuario']  = $permisosUsuario;
+            $data['role']     = $permisosRole;
+
+            /*$query_array = array();
+            if ($query_id > 0) {
+                $this->input->load_query($query_id);
+                $query_array = array(
+                    'Usuario' => $this->input->get('Usuario')
+                );
+                if ($this->input->get('Condicion')) {
+                    $query_array['Condicion'] = $this->input->get('Condicion');
+                }
+            }*/
+
+            if (is_numeric($data['num_rows']) && $data['num_rows'] > 0) {
+                $config['base_url'] = base_url() . 'administracion/usuarios/permisosUser/' . $id;
+                $config['total_rows'] = $data['num_rows'];
+                $config['per_page'] = $limit;
+                $config['uri_segment'] = '5';
+                $this->pagination->initialize($config);
+                $data['pag_links'] = $this->pagination->create_links();
+            }
+
+            $this->load->helper(array('funciones_helper'));
+            $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
+            $data['jsLoad'] = array('funciones', 'usuarios/funciones');
+            $data['title'] = 'SISTCORP - Administraci&oacute;n de Permisos del Usuario';
+            $data['subtitle'] = 'Administraci&oacute;n de Permisos del Usuario';
+            $data['main_content'] = 'permisosUsuario';
+            $this->load->view('includes/aplication/template', $data);
         }
     }
 

@@ -69,10 +69,15 @@ $(document).on("ready", function() {
         }, 'json');
         return false;
     });
-    
+
     $("#btnEditAceptar").on("click", function() {
         if (rptaValidation == 0) {
             $("form#frmEditUser").submit();
         }
+    });
+
+    $("#btnGuardar").on("click", function(event) {
+        event.preventDefault();
+        $("form#frmPermUser").submit();
     });
 });

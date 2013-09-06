@@ -5,10 +5,10 @@
  * Descripción  : Controlador que se encargará de administrar los perfiles de usuarios disponibles en la aplicación.
  * @author Ing. José Pérez
  */
-class Perfil extends MX_Controller 
+class Perfil extends MX_Controller
 {
 
-    function __construct() 
+    function __construct()
     {
         parent::__construct();
         $this->load->model('Perfil_Model');
@@ -20,20 +20,20 @@ class Perfil extends MX_Controller
     /**
      * Nos cargará la vista por defecto del controlador perfil
      */
-    function index($query_id = 0) 
+    function index($query_id = 0)
     {
         if ($this->_is_logged_in()) {
             if ( !$this->acl->hasPermission('perf_view') ) {
                 $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
                 redirect('/dashboard/');
             }
-            
+
             $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
-            
+
             $query_array = array();
             if ($query_id > 0) {
                 $this->input->load_query($query_id);
@@ -41,9 +41,9 @@ class Perfil extends MX_Controller
                     'Perfil' => $this->input->get('Perfil')
                 );
             }
-            
+
             $results = $this->Perfil_Model->getPerfiles($query_array, $limit, $this->uri->segment(5));
-            
+
             $data['perfil'] = $results['rows'];
             $data['query_id'] = $query_id;
             $data['num_rows'] = $results['num_rows'];
@@ -70,7 +70,7 @@ class Perfil extends MX_Controller
     /**
      * Función para validar a través de Ajax
      */
-    function validatePerfilAjax() 
+    function validatePerfilAjax()
     {
         $this->load->library('validator');
         $response =
@@ -92,10 +92,10 @@ class Perfil extends MX_Controller
 
     /**
      * Realizará validaciones del lado del servidor y si todo esta correcto
-     * ingresará el nuevo registro a la base de datos. 
+     * ingresará el nuevo registro a la base de datos.
      * @access     public
      */
-    function verifyAddPerfil() 
+    function verifyAddPerfil()
     {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtPerfil', 'Perfil', 'trim|required|callback__verifyExistPerfil');
@@ -127,7 +127,7 @@ class Perfil extends MX_Controller
      * @param  String  $perfil
      * @return Boolean
      */
-    function _verifyExistPerfil($perfil) 
+    function _verifyExistPerfil($perfil)
     {
         $result = $this->Perfil_Model->getPerfilByName($perfil);
         if ($result) {
@@ -142,7 +142,7 @@ class Perfil extends MX_Controller
      * @access     public
      * @param      integer     $id_perfil  Contiene el id del perfil a editar
      */
-    function getPerfil() 
+    function getPerfil()
     {
         if ($this->_is_logged_in()) {
             $id = $this->input->post('idperfil');
@@ -154,11 +154,11 @@ class Perfil extends MX_Controller
     }
 
     /**
-     * Se encargará de validar que se haya ingresado correctamente los valores para editar. Si no cumple se devuelve 
+     * Se encargará de validar que se haya ingresado correctamente los valores para editar. Si no cumple se devuelve
      * a editPerfil. Y si cumple se actualizará el perfil en la base de datos.
      * @access     public
      */
-    function verifyEditPerfil() 
+    function verifyEditPerfil()
     {
         if ($this->_is_logged_in()) {
             $this->form_validation->set_rules('txtPerfilEdit', 'Perfil', 'trim|required');
@@ -203,7 +203,7 @@ class Perfil extends MX_Controller
      * como parámetro
      * @access     public
      */
-    function deletePerfil() 
+    function deletePerfil()
     {
         if ($this->_is_logged_in()) {
             if ($this->uri->segment(4)) {
@@ -221,52 +221,52 @@ class Perfil extends MX_Controller
      * Función que permitirá buscar un determinado perfil
      * @access     public
      */
-    function searchPerfil() 
+    function searchPerfil()
     {
         if ($this->_is_logged_in()) {
             if ($this->input->post('txtNomPerfil') == '') {
                 redirect('administracion/perfil/index');
             }
-            
+
             $query_array = array(
                 'Perfil' => $this->input->post('txtNomPerfil')
             );
-            
+
             $query_id = $this->input->save_query($query_array);
             redirect('administracion/perfil/index/' . $query_id);
-            
+
         }
     }
-    
+
     /**
      * Cargamos los permisos asignados a un perfil específico
      * @access      public
      */
     public function permisosPerfil()
     {
-        if ($this->_is_logged_in()) {            
+        if ($this->_is_logged_in()) {
             if ( !$this->acl->hasPermission('perf_view') ) {
                 $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
                 redirect('/dashboard/');
             }
-            
+
             $idPerfil = $this->uri->segment(4);
             $datos = $this->Perfil_Model->getPerfilByID($idPerfil);
             $data['perfil'] = $datos->Perfil;
-            
+
             $limit = 20;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
-            
+
             $this->load->model('Acciones_Model');
-               
+
             $result = $this->Acciones_Model->getPermsRole($idPerfil);
             $data['num_rows'] = count($result);
             $data['permisos'] = array_slice($this->Acciones_Model->getPermsRole($idPerfil), $this->uri->segment(5), $limit);
-            
-            
+
+
             if (is_numeric($data['num_rows']) && $data['num_rows'] > 0) {
                 $config['base_url'] = base_url() . 'administracion/perfil/permisosPerfil/' . $idPerfil;
                 $config['total_rows'] = $data['num_rows'];
@@ -285,15 +285,15 @@ class Perfil extends MX_Controller
             $this->load->view('includes/aplication/template', $data);
         }
     }
-    
+
     public function editPermisos()
     {
-        if ($this->_is_logged_in()) {            
+        if ($this->_is_logged_in()) {
             if ( !$this->acl->hasPermission('perm_edit_all') ) {
                 $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para acceder a esta página');
                 redirect('/dashboard/');
             }
-            
+
             $values = array_keys($_POST);
             $id = $this->input->post('ID_PERFIL');
             $replace = array();
@@ -326,9 +326,9 @@ class Perfil extends MX_Controller
                     }
                 }
             }
-            
+
             $this->load->model('Acciones_Model');
-            
+
             if ( !$this->acl->hasPermission('perm_del_all') and count($eliminar) ) {
                 $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para eliminar permisos del perfil.');
                 redirect('administracion/perfil/permisosPerfil/' . $id);
@@ -337,7 +337,7 @@ class Perfil extends MX_Controller
                     $this->Acciones_Model->eliminarPermisoPerfil($eliminar[$i]['perfil'], $eliminar[$i]['permiso']);
                 }
             }
-            
+
             if ( !$this->acl->hasPermission('perm_edit_all') and count($replace)) {
                 $this->session->set_flashdata('mensaje_error', 'No tiene el permiso para editar los permisos del perfil.');
                 redirect('administracion/perfil/permisosPerfil/' . $id);
@@ -345,7 +345,7 @@ class Perfil extends MX_Controller
                 for ($i = 0; $i < count($replace); $i++) {
                     $this->Acciones_Model->editarPermisoPerfil($replace[$i]['perfil'], $replace[$i]['permiso'], $replace[$i]['valor']);
                 }
-            }            
+            }
         }
         $this->session->set_flashdata('mensaje_exito', 'Se realizaron los cambios correctamente.');
         redirect('administracion/perfil/permisosPerfil/' . $id);

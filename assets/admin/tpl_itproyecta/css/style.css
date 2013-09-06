@@ -2,10 +2,10 @@
 @font-face {
     font-family: 'Ubuntu';
     src: local('Ubuntu'),
-        url('../fonts/Ubuntu-Regular.eot#') format('eot'),
-        url('../fonts/Ubuntu-Regular.woff') format('woff'),
-        url('../fonts/Ubuntu-Regular.ttf')  format('truetype'),
-        url('../fonts/Ubuntu_Regular.svg#svgFontName') format('svg');
+        url('../../../fonts/Ubuntu-Regular.eot#') format('eot'),
+        url('../../../fonts/Ubuntu-Regular.woff') format('woff'),
+        url('../../../fonts/Ubuntu-Regular.ttf')  format('truetype'),
+        url('../../../fonts/Ubuntu_Regular.svg#svgFontName') format('svg');
 }
 /********************** HEADER ****************************/
 body{
@@ -14,7 +14,7 @@ body{
     font-size: 16px;
 }
 header{
-    background: transparent url(../images/bg_header.jpg) repeat;
+    background: transparent url(../img/bg_header.jpg) repeat;
     height: auto;
 }
 /* Logo */
@@ -26,7 +26,7 @@ header{
     padding-right: .4167em;
 }
 /* Mnu_setting */
-#mnu_setting{    
+#mnu_setting{
     padding-top: .625em;
     text-align: right;
 }
@@ -49,7 +49,7 @@ header{
     padding: .625em;
 }
 #login form input:not([type="submit"]), #login form select{
-     background-color: #ededed; 
+     background-color: #ededed;
 }
 #msn{
     clear: both;
@@ -65,7 +65,7 @@ header{
 /********************FIN LOGIN ****************************/
 /************************ MENU ***************************/
 nav{
-    background: transparent url(../images/bg_mnu.png) repeat-x;
+    background: transparent url(../img/bg_mnu.png) repeat-x;
     height: auto;
 }
 #menu ul.nav-pills{
@@ -140,7 +140,7 @@ nav{
     margin-bottom: 2em;
 }
 #main .thumbnail{
-    text-align:center;    
+    text-align:center;
 }
 #main h3{
     color: #999;
@@ -174,7 +174,7 @@ tr.content_grid td{
 /********************FIN MAIN *****************************/
 /******************** FOOTER ******************************/
 footer{
-    background: transparent url(../images/bg_mnu.png) repeat-x;
+    background: transparent url(../img/bg_mnu.png) repeat-x;
     background-color:#202020;
     height:auto;
     margin-top: .625em;
@@ -194,12 +194,12 @@ div[id$="Failed"]{
 }
 .nook{
     display: inline;
-    background: transparent url(../images/nook.png) no-repeat;
+    background: transparent url(../imgs/nook.png) no-repeat;
     margin-left: 10px;
 }
 .ok{
     display: inline;
-    background: transparent url(../images/ok.png) no-repeat;
+    background: transparent url(../imgs/ok.png) no-repeat;
     margin-left: 10px;
 }
 .hidden{

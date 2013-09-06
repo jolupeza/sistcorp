@@ -53,7 +53,7 @@ class Usuarios_Model extends CI_Model {
         $this->db->order_by("ID_USUARIO", "asc");
         $this->db->limit($cuantos, $inicio);
         $result['rows'] = $this->db->get()->result();
-        
+
         $this->db->select('ID_USUARIO');
         $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
         $this->db->where($where);
@@ -64,16 +64,16 @@ class Usuarios_Model extends CI_Model {
         }
         $tmp = $this->db->get($this->_table);
         $result['num_rows'] = $tmp->num_rows();
-        
+
         return $result;
     }
 
     /** (1)
      * Método para verificar si un usuario se encuentra registrado
-     * @param   String $username 
+     * @param   String $username
      * @return  Boolean
      */
-    function getUserByUsername($username) 
+    function getUserByUsername($username)
     {
         $this->db->where('Usuario', $username);
         $result = $this->db->get($this->_table);
@@ -98,7 +98,7 @@ class Usuarios_Model extends CI_Model {
      * @param       Integer   $data['ID_PERFIL'] ID_Perfil
      * @return      Boolean     De acuerdo si se efectuó correctamente la inserción
      */
-    function addUser($data) 
+    function addUser($data)
     {
         // Verificamos que el usuario a agregar no se encuentre ya registrado en la base de datos
         $this->db->where('Usuario', $data['Usuario']);
@@ -113,13 +113,13 @@ class Usuarios_Model extends CI_Model {
     }
 
     /** (1)
-     * Método para seleccionar un usuario específico 
+     * Método para seleccionar un usuario específico
      * @access      public
      * @param       String      Id del usuario a editar
      * @return      Array       Obtenemos un array con los datos del perfil
      *                          indicado
      */
-    function getUserByID($id) 
+    function getUserByID($id)
     {
         $this->db->select('ID_USUARIO, Usuario, Nombres, Ape_Paterno, Ape_Materno, Sexo, Email, Telefono, Activo, ID_EMPRESA, ID_PERFIL');
         $where = array('ID_EMPRESA' => $this->session->userdata('empresa'), 'ID_USUARIO' => $id);
@@ -135,9 +135,9 @@ class Usuarios_Model extends CI_Model {
      * Método para verificar si email ya se encuentra registrado
      * @access      public
      * @param       String      $email
-     * @return      Boolean     
+     * @return      Boolean
      */
-    function verifyEmail($email) 
+    function verifyEmail($email)
     {
         $this->db->where('Email', $email);
         $result = $this->db->get($this->_table);
@@ -145,7 +145,7 @@ class Usuarios_Model extends CI_Model {
             return 1;  // Que usuario no esta en la base de datos
         }
         return 0;
-    }    
+    }
 
     /** (1)
      * Método para editar información de usuario
@@ -161,7 +161,7 @@ class Usuarios_Model extends CI_Model {
      * @param       Integer   $data['ID_PERFIL'] ID_Perfil
      * @return      Boolean     De acuerdo si se efectuó correctamente la edición
      */
-    function editUser($data, $id_usuario) 
+    function editUser($data, $id_usuario)
     {
         $id = (int) $id_usuario;
         if (is_int($id)) {
@@ -177,8 +177,62 @@ class Usuarios_Model extends CI_Model {
      * @return      Boolean     De acuerdo si se efectuó correctamente la
      *                          inserción
      */
-    function deleteUser($id_usuario) 
+    function deleteUser($id_usuario)
     {
         return $this->db->delete('tbl_usuario', array('ID_USUARIO' => $id_usuario));
+    }
+
+    /**
+     * Método para obtener un array con todos los permisos del sistema y mostrando que permisos tiene el usuario
+     * @access      public
+     * @param       Integer     $userID     Id del usuario
+     * @return      Array                   Con los permisos del sistema y mostrando que permisos tiene el usuario
+    */
+    public function getPermisosUsuario($userID)
+    {
+        $userID = (int) $userID;
+        $acl = new Acl($userID);
+        return $acl->getPermisos();
+    }
+
+    /**
+     * Obtener permisos del rol del usuario.
+     *
+     * @param int $id
+     * Id del usuario.
+     *
+     * @return
+     * Los permisos del rol del usuario.
+     */
+    public function getPermisosRole($userId)
+    {
+        $userId = (int) $userId;
+        $acl = new ACL($userId);
+        return $acl->getPermisosRole();
+    }
+
+    /**
+     * Eliminar permiso a un usuario específico.
+     *
+     * @param int $usuarioID
+     * Id del usuario.
+     *
+     * @param int $permisoID
+     * Id del permiso.
+     *
+     * @return
+     * Los permisos del rol del usuario.
+     */
+    public function eliminarPermiso($userID, $permisoID)
+    {
+        $this->db->where(array('ID_USUARIO' => $userID, 'ID_ACCION' => $permisoID));
+        $this->db->delete('tbl_user_accion');
+    }
+
+    public function editarPermiso($userID, $permisoID, $valor)
+    {
+        $data = array('Activo' => $valor);
+        $this->db->where(array('ID_USUARIO' => $userID, 'ID_ACCION' => $permisoID));
+        $this->db->update('tbl_user_accion', $data);
     }
 }
