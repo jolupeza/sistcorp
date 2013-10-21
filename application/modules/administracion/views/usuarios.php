@@ -8,9 +8,9 @@
                 <span>Acciones</span>
                 <div id="opciones">
                 <?php if ($this->acl->hasPermission('user_add')) : ?>
-                    <a href="javascript:void(0);" id="addUser" title="Agregar Usuario"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>
+                    <a href="javascript:void(0);" id="addUser" title="Agregar Usuario"><?php echo img(base_url() . 'assets/admin/tpl_itproyecta/img/nuevo.png') . 'Agregar'; ?></a>
                 <?php endif; ?>
-                    <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'images/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
+                    <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'assets/admin/tpl_itproyecta/img/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
                 </div>
             </div>
             <!-- Fin acciones -->
@@ -48,55 +48,80 @@
         <!-- Inicio #main -->
         <section class="span9" id="main">
             <h3><?php echo $subtitle; ?></h3>
-            <?php if (isset($users) && count($users) > 0) : ?>
-                <table class="container_grid">
-                    <tr class="header_grid">
-                        <td>ID</td>
-                        <td>USUARIO</td>
-                        <td>NOMBRE</td>
-                        <td>EMAIL</td>
-                        <td>PERFIL</td>
-                        <td>ACTIVO</td>
-                    <?php if($this->acl->hasPermission('perm_view')) : ?>
-                        <td>PERMISOS</td>
-                    <?php endif; ?>
-                    <?php if($this->acl->hasPermission('user_edit_all')) : ?>
-                        <td>EDITAR</td>
-                    <?php endif; ?>
-                    <?php if($this->acl->hasPermission('use_del_all')) : ?>
-                        <td>ELIMINAR</td>
-                    <?php endif; ?>
+        <?php if (isset($users) && count($users) > 0) : ?>
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>USUARIO</th>
+                        <th>NOMBRE</th>
+                        <th>EMAIL</th>
+                        <th>PERFIL</th>
+                        <th>ACTIVO</th>
+                        <th>ACCIONES</th>
                     </tr>
-                    <?php foreach ($users as $row) : ?>
-                        <tr class="content_grid">
-                            <td class="text-center"><?php echo $row->ID_USUARIO; ?></td>
-                            <td><?php echo $row->Usuario; ?></td>
-                            <td><?php echo $row->Nombres . ' ' . $row->Ape_Paterno . ' ' . $row->Ape_Materno; ?></td>
-                            <td><?php echo $row->Email; ?></td>
-                            <td><?php echo $row->PERFIL; ?></td>
-                            <td class="text-center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No';echo $activo; ?></td>
-                        <?php if($this->acl->hasPermission('perm_view')) : ?>
-                            <td class="text-center"><?php echo anchor('administracion/usuarios/permisosUser/' . $row->ID_USUARIO, img(base_url() . 'images/permisos.png'), 'title="Ver permisos de ' . $row->Usuario . '"') ?></td>
-                        <?php endif; ?>
-                        <?php if($this->acl->hasPermission('user_edit_all')) : ?>
-                            <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-iduser="' . $row->ID_USUARIO . '" class="editUser" title="Editar ' . $row->Usuario . '"') ?></td>
-                        <?php endif; ?>
-                        <?php if($this->acl->hasPermission('use_del_all')) : ?>
-                            <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Usuario; ?>" onclick="deleteRow('<?php echo $row->Usuario; ?>', '<?php echo base_url() . 'administracion/usuarios/deleteUser/' . $row->ID_USUARIO; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
-                        <?php endif; ?>
-                        </tr>
-                <?php endforeach; ?>
-                </table>
-                    <?php if (isset($pag_links)) : ?>
-                    <ul id="pagination">
-                    <?php echo $pag_links; ?>
-                    </ul>
-    <?php endif; ?>
-<?php else : ?>
-                <div class="alert alig_center">
-                    No se encontraron datos para mostrar.
-                </div>
-<?php endif; ?>
+                </thead>
+            <?php foreach ($users as $row) : ?>
+                <tbody>
+                    <tr>
+                        <td class="td-center"><?php echo $row->ID_USUARIO; ?></td>
+                        <td><?php echo $row->Usuario; ?></td>
+                        <td><?php echo $row->Nombres . ' ' . $row->Ape_Paterno . ' ' . $row->Ape_Materno; ?></td>
+                        <td><?php echo $row->Email; ?></td>
+                        <td><?php echo $row->PERFIL; ?></td>
+                        <td class="td-center"><?php $activo = ($row->Activo == '1') ? 'S&iacute;' : 'No';echo $activo; ?></td>
+                        <td class="td-center">
+                <?php if($this->acl->hasPermission('perm_view')) : ?>
+                        <?php echo anchor('administracion/usuarios/permisosUser/' . $row->ID_USUARIO, img(base_url() . 'assets/admin/tpl_itproyecta/img/permisos.png'), 'title="Ver permisos de ' . $row->Usuario . '"') ?>
+                <?php endif; ?>
+                <?php if($this->acl->hasPermission('user_edit_all')) : ?>
+                        <?php echo anchor('', img(base_url() . 'assets/admin/tpl_itproyecta/img/edit.png'), 'data-iduser="' . $row->ID_USUARIO . '" class="editUser" title="Editar ' . $row->Usuario . '"') ?>
+                <?php endif; ?>
+                <?php if($this->acl->hasPermission('user_del_all')) : ?>
+                        <a href="javascript:void(0);" title="Eliminar <?php echo $row->Usuario; ?>" onclick="deleteRow('<?php echo $row->Usuario; ?>', '<?php echo base_url() . 'administracion/usuarios/deleteUser/' . $row->ID_USUARIO; ?>');"><?php echo img(base_url() . 'assets/admin/tpl_itproyecta/img/delete.png'); ?></a>
+                <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            <?php endforeach; ?>
+            </table>
+            <?php if (isset($pag_links)) : ?>
+                <ul id="pagination">
+                <?php echo $pag_links; ?>
+                </ul>
+            <?php endif; ?>
+            <div class="extra-table">
+                <ul>
+                    <li><?php echo anchor('', '<i class="icon-search"></i>', 'title="Buscar"') ?></li>
+                    <li>
+                        <form action="">
+                            <select>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </form>
+                    </li>
+                    <li>
+                        <form class="form-horizontal" action="">
+                            <div class="control-group">
+                                <label class="control-label" for="txtPagina">Página</label>
+                                <div class="controls">
+                                    <input type="text" name="txtPagina" id="txtPagina">
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li><span>Mostrando 1 a 1 de 1 registros</span></li>
+                </ul>
+            </div>
+        <?php else : ?>
+            <div class="alert alig_center">
+                No se encontraron datos para mostrar.
+            </div>
+        <?php endif; ?>
         </section>
         <!-- Fin #main -->
 

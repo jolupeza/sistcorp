@@ -1,17 +1,17 @@
 <!-- Inicio container -->
-<div class="container-fluid">    
+<div class="container-fluid">
     <div class="row-fluid">
         <!-- Inicio #submenu -->
         <aside class="span3" id="submenu">
-            <!-- Inicio acciones -->
+            <!-- Inicio acciones --
             <div class="acciones">
                 <span>Acciones</span>
-                <div id="opciones">                        
+                <div id="opciones">
                     <a href="javascript:void(0);" id="addPerfil" title="Agregar Perfil"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>
                     <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'images/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
                 </div>
             </div>
-            <!-- Fin acciones -->
+            <!-- Fin acciones --
 
             <?php if ($this->session->flashdata('mensaje_error')) : ?>
                 <div class="alert alert-error"><p><?php echo $this->session->flashdata('mensaje_error'); ?></p></div>
@@ -21,7 +21,7 @@
                 <div class="alert alert-success"><p><?php echo $this->session->flashdata('mensaje_exito'); ?></p></div>
             <?php endif; ?>
 
-            <!-- Inicio .acciones -->
+            <!-- Inicio .acciones --
             <div class="acciones">
                 <span>B&uacute;squeda de Perfil</span>
                 <?php
@@ -31,20 +31,21 @@
                     <?php echo form_input(array('name' => 'txtNomPerfil', 'class' => 'span7 search-query', 'value' => set_value('txtNomPerfil'))); ?>
                     <button type="submit" class="btn"><i class="icon-search"></i></button>
                 </div>
-                <?php echo form_close(); ?> 
+                <?php echo form_close(); ?>
             </div>
-            <!-- Fin .acciones -->
+            <!-- Fin .acciones --
             <?php if (validation_errors()) : ?>
                 <div class="alert alert-error"><?php echo validation_errors(); ?></div>
-            <?php endif; ?>
+            <?php endif; ?>-->
         </aside>
         <!-- Fin #submenu -->
 
         <!-- Inicio #main -->
         <section class="span9" id="main">
-            <h3><?php echo $subtitle; ?></h3>  
+            <h3><?php echo $subtitle; ?></h3>
             <?php if (isset($perfil) && count($perfil) > 0) : ?>
-                <table class="container_grid">
+            <?php echo $perfil->output; ?>
+            <!--    <table class="container_grid">
                     <tr class="header_grid">
                         <td>ID</td>
                         <td>PERFIL</td>
@@ -70,13 +71,13 @@
                         <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Perfil; ?>" onclick="deleteRow('<?php echo $row->Perfil; ?>', '<?php echo base_url() . 'administracion/perfil/deletePerfil/' . $row->ID_PERFIL; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
                     </tr>
                     <?php endforeach; ?>
-                </table>            
+                </table>
 
                 <?php if (isset($pag_links)) : ?>
                     <ul id="pagination">
                         <?php echo $pag_links; ?>
-                    </ul> 
-                <?php endif; ?>
+                    </ul>
+                <?php endif; ?>-->
             <?php else : ?>
                 <div class="alert alig_center">
                     No se encontraron datos para mostrar.
@@ -85,7 +86,7 @@
         </section>
         <!-- Fin #main -->
 
-        <!-- Formulario que nos permitirá agregar un nuevo perfil -->        
+        <!-- Formulario que nos permitirá agregar un nuevo perfil -->
         <!-- Inicio addPerfilModal -->
         <div class="modal hide fade" id="addPerfilModal">
             <div class="modal-header">
@@ -93,7 +94,7 @@
                 <h3>Agregar Perfil</h3>
             </div>
             <?php echo form_open('administracion/perfil/verifyAddPerfil', array('name' => 'frmAddPerfil', 'id' => 'frmAddPerfil', 'class' => 'form-horizontal')); ?>
-            <div class="modal-body">                
+            <div class="modal-body">
                 <div class="control-group">
                     <?php echo form_label('Perfil: *', 'txtPerfil', array('class' => 'control-label')); ?>
                     <div class="controls">
@@ -125,7 +126,7 @@
                 echo form_button(array('class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
                 echo form_button(array('id' => 'btnAddAceptar', 'class' => 'btn btn-primary', 'value' => 'Agregar Perfil', 'content' => 'Agregar Perfil'));
-                ?> 
+                ?>
             </div>
             <?php echo form_close(); ?>
             <!-- Inicio div cargando -->
@@ -136,12 +137,12 @@
         </div>
         <!-- Fin addPerfilModal -->
 
-        <!-- Formulario que nos permitirá editar información de perfil -->        
+        <!-- Formulario que nos permitirá editar información de perfil -->
         <!-- Inicio editPerfilModal -->
         <div class="modal hide fade" id="editPerfilModal">
             <div class="modal-header">
                 <a class="close" data-dismiss="modal">×</a>
-                <h3>Editar Perfil</h3>                
+                <h3>Editar Perfil</h3>
             </div>
             <?php echo form_open('administracion/perfil/verifyEditPerfil', array('name' => 'frmEditPerfil', 'id' => 'frmEditPerfil', 'class' => 'form-horizontal')); ?>
             <div class="modal-body">
@@ -158,7 +159,7 @@
                         ?>
                         <div id="txtPerfilEditFailed" class="hidden"></div>
                     </div>
-                </div>                
+                </div>
                 <div class="control-group">
                     <?php echo form_label('Activo :', 'ddlActivo', array('class' => 'control-label')); ?>
                     <div class="controls">
@@ -179,11 +180,11 @@
                 echo form_button(array('id' => 'btnCancelar', 'class' => 'btn btn-primary', 'value' => 'Cancelar', 'content' => 'Cancelar', 'data-dismiss' => 'modal'));
                 // Creamos el boton Agregar Perfil
                 echo form_button(array('id' => 'btnEditAceptar', 'class' => 'btn btn-primary', 'value' => 'Editar Perfil', 'content' => 'Editar Perfil'));
-                ?> 
+                ?>
             </div>
             <?php echo form_close(); ?>
         </div>
-        <!-- Fin editPerfilModal -->     
+        <!-- Fin editPerfilModal -->
     </div>
 </div>
 <!-- Fin container -->

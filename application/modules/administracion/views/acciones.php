@@ -8,9 +8,12 @@
                 <span>Acciones</span>
                 <div id="opciones">
                 <?php if ( $this->acl->hasPermission('perm_add') ) : ?>
-                    <a href="javascript:void(0);" id="addPermiso" title="Agregar Permiso"><?php echo img(base_url() . 'images/nuevo.png') . 'Agregar'; ?></a>
+                    <a href="javascript:void(0);" id="addPermiso" title="Agregar Permiso"><?php echo img(base_url() . 'assets/admin/tpl_itproyecta/img/nuevo.png') . 'Agregar'; ?></a>
                 <?php endif; ?>
-                    <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'images/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
+                <?php if ($this->acl->hasPermission('perm_view')) : ?>
+                    <?php echo anchor('administracion/acciones/', img(base_url() . 'assets/admin/tpl_itproyecta/img/pdf.png') . 'Exportar a PDF', 'title="Exportar a PDF"'); ?>
+                <?php endif; ?>
+                    <?php echo anchor(site_url() . 'dashboard', img(base_url() . 'assets/admin/tpl_itproyecta/img/back.png') . 'Atr&aacute;s', 'title="Atr&aacute;s"'); ?>
                 </div>
             </div>
             <!-- Fin acciones -->
@@ -23,19 +26,6 @@
                 <div class="alert alert-success"><p><?php echo $this->session->flashdata('mensaje_exito'); ?></p></div>
             <?php endif; ?>
 
-            <!-- Inicio .acciones -->
-            <div class="acciones">
-                <span>B&uacute;squeda de Perfil</span>
-                <?php
-                echo form_open('administracion/acciones/searchAccion', array('name' => 'frmsearch', 'class' => 'form-search'));
-                ?>
-                <div class="input-append">
-                    <?php echo form_input(array('name' => 'txtSearchAccion', 'class' => 'span7 search-query', 'value' => set_value('txtSearchAccion'))); ?>
-                    <button type="submit" class="btn"><i class="icon-search"></i></button>
-                </div>
-                <?php echo form_close(); ?>
-            </div>
-            <!-- Fin .acciones -->
             <?php if (validation_errors()) : ?>
                 <div class="alert alert-error"><?php echo validation_errors(); ?></div>
             <?php endif; ?>
@@ -46,47 +36,84 @@
         <section class="span9" id="main">
             <h3><?php echo $subtitle; ?></h3>
             <?php if (isset($acciones) && count($acciones) > 0) : ?>
-                <table class="container_grid">
-                    <tr class="header_grid">
-                        <td>ID</td>
-                        <td>PERMISO</td>
-                        <td>KEY</td>
-                        <td>ACTIVO</td>
-                    <?php if ( $this->acl->hasPermission('perm_edit_all') ) : ?>
-                        <td>EDITAR</td>
-                    <?php endif; ?>
-                    <?php if ( $this->acl->hasPermission('perm_del_all') ) : ?>
-                        <td>ELIMINAR</td>
-                    <?php endif; ?>
-                    </tr>
-                    <?php foreach ($acciones as $row) : ?>
-                    <tr class="content_grid">
-                        <td class="text-center"><?php echo $row->ID_ACCION; ?></td>
-                        <td><?php echo $row->Accion; ?></td>
-                        <td><?php echo $row->AccionKey; ?></td>
-                        <?php
-                        if ($row->Activo == '0') {
-                        $activo = 'No';
-                        } else if ($row->Activo == '1') {
-                        $activo = 'S&iacute;';
-                        }
-                        ?>
-                        <td class="text-center"><?php echo $activo; ?></td>
-                    <?php if ( $this->acl->hasPermission('perm_edit_all') ) : ?>
-                        <td class="text-center"><?php echo anchor('', img(base_url() . 'images/edit.png'), 'data-idaccion="' . $row->ID_ACCION . '" class="editAccion" title="Editar ' . $row->Accion . '"') ?></td>
-                    <?php endif; ?>
-                    <?php if ( $this->acl->hasPermission('perm_del_all') ) : ?>
-                        <td class="text-center"><a href="javascript:void(0);" title="Eliminar <?php echo $row->Accion; ?>" onclick="deleteRow('<?php echo $row->Accion; ?>', '<?php echo base_url() . 'administracion/acciones/deletePermiso/' . $row->ID_ACCION; ?>');"><?php echo img(base_url() . 'images/delete.png'); ?></a></td>
-                    <?php endif; ?>
-                    </tr>
-                    <?php endforeach; ?>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                        <?php foreach ($fields as $field_name => $field_display) : ?>
+                            <?php $sort = ($sort_order == "asc") ? "desc" : "asc"; ?>
+                            <th><?php echo anchor('administracion/acciones/index/' . $this->uri->segment(4) . '/' . $field_name . '/' . $sort . '/' . $registros, $field_display); ?></th>
+                        <?php endforeach; ?>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                <?php foreach ($acciones as $row) : ?>
+                        <tr class="content_grid">
+                        <?php foreach ($fields as $field_name => $field_display) : ?>
+                            <td class="td-center">
+                            <?php
+                                if ($field_name == 'Activo') {
+                                    $activo = ($row->Activo == '1') ? 'Sí' : 'No';
+                                    echo $activo;
+                                } else {
+                                    echo $row->$field_name;
+                                }
+                            ?>
+                            </td>
+                        <?php endforeach; ?>
+                            <td class="td-center">
+                        <?php if ( $this->acl->hasPermission('perm_edit_all') ) : ?>
+                                <?php echo anchor('', img(base_url() . 'assets/admin/tpl_itproyecta/img/edit.png'), 'data-idaccion="' . $row->ID_ACCION . '" class="editAccion" title="Editar ' . $row->Accion . '"') ?>
+                        <?php endif; ?>
+                        <?php if ( $this->acl->hasPermission('perm_del_all') ) : ?>
+                                <a href="javascript:void(0);" title="Eliminar <?php echo $row->Accion; ?>" onclick="deleteRow('<?php echo $row->Accion; ?>', '<?php echo base_url() . 'administracion/acciones/deletePermiso/' . $row->ID_ACCION; ?>');"><?php echo img(base_url() . 'assets/admin/tpl_itproyecta/img/delete.png'); ?></a>
+                        <?php endif; ?>
+                            </td>
+                        </tr>
+                <?php endforeach; ?>
+                    </tbody>
                 </table>
-
-                <?php if (isset($pag_links)) : ?>
+                <?php if (strlen($pag_links)) : ?>
+                <div class="pagination">
                     <ul id="pagination">
                         <?php echo $pag_links; ?>
                     </ul>
+                </div><!-- end pagination -->
                 <?php endif; ?>
+
+                <div class="panel-search">
+                    <form class="form-inline" action="<?php echo base_url(); ?>administracion/acciones/searchPermisos/<?php echo $registros; ?>" method="post">
+                        <fieldset>
+                            <legend>Buscador</legend>
+                                <label for="txtPermisoSearch">Permiso: </label>
+                                <input type="text" name="txtPermisoSearch" id="txtPermisoSearch">
+                                <label for="txtOpcionSearch">Opción: </label>
+                                <input type="text" name="txtOpcionSearch" id="txtOpcionSearch">
+                                <label for="txtClaveSearch">Clave: </label>
+                                <input type="text" name="txtClaveSearch" id="txtClaveSearch">
+                                <button type="submit" class="btn"><i class="icon-search"></i></button>
+                        </fieldset>
+                    </form>
+                </div><!-- end panel-search -->
+
+                <div class="extra-table">
+                    <ul>
+                        <li><?php echo anchor('', '<i class="icon-search"></i>', 'title="Buscar" class="displaySearch"') ?></li>
+                        <li>
+                            <select class="span12" id="slRegistro" data-sortby="<?php echo $this->uri->segment(5); ?>" data-sortorder="<?php echo $this->uri->segment(6); ?>" data-search="<?php echo $this->uri->segment(4); ?>">
+                            <?php for($i = 10; $i <= 100; $i+=10) : ?>
+                                <option value="<?php echo $i ?>" <?php if ($registros == $i) { echo 'selected="selected"'; } ?>><?php echo $i; ?></option>
+                            <?php endfor; ?>
+                            </select>
+                        </li>
+                        <li>
+                            <label for="txtPagina">Página: </label>
+                            <input class="input-mini" type="text" name="txtPage" id="txtPage" data-total="<?php echo $num_rows; ?>" data-sortby="<?php echo $this->uri->segment(5); ?>" data-sortorder="<?php echo $this->uri->segment(6); ?>" data-search="<?php echo $this->uri->segment(4); ?>">
+                            <button class="btn" id="btnGo">Ir</button>
+                        </li>
+                        <li><span>Mostrando <?php if ($registros > $num_rows) echo $num_rows; else echo $registros; ?> registros de <?php echo $num_rows; ?></span></li>
+                    </ul>
+                </div><!-- end extra-table -->
             <?php else : ?>
                 <div class="alert alig_center">
                     No se encontraron datos para mostrar.

@@ -19,6 +19,10 @@
         <script src="<?php echo base_url(); ?>assets/admin/tpl_itproyecta/js/<?php echo $jsLoad[$i]; ?>.js"></script>
     <?php endfor; ?>
 <?php endif; ?>
+
+<!--<?php foreach($perfil->js_files as $file): ?>
+    <script src="<?php echo $file; ?>"></script>
+<?php endforeach; ?>-->
     <script>var _root_ = '<?php echo base_url(); ?>'</script>
 </body>
 </html>

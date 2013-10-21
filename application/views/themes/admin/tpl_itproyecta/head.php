@@ -7,6 +7,11 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/tpl_itproyecta/css/bootstrap.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/tpl_itproyecta/css/bootstrap-responsive.css"  />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/tpl_itproyecta/css/style.css" />
+
+    <!--<?php foreach($perfil->css_files as $file): ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
+    <?php endforeach; ?>-->
+
         <!-- Cargamos los estilos propios de una vista -->
         <?php if (isset($cssLoad) && count($cssLoad)) : ?>
             <?php for ($i = 0; $i < count($cssLoad); $i++) : ?>

@@ -73,7 +73,7 @@ class Usuarios extends MX_Controller
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Usuarios';
             $data['subtitle'] = 'Administraci&oacute;n de Usuarios';
             $data['main_content'] = 'usuarios';
-            $this->load->view('includes/aplication/template', $data);
+            $this->load->view('themes/admin/template.php', $data);
         }
     }
 

@@ -7,6 +7,18 @@
         url('../../../fonts/Ubuntu-Regular.ttf')  format('truetype'),
         url('../../../fonts/Ubuntu_Regular.svg#svgFontName') format('svg');
 }
+/** {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}*/
+table {
+    font-size: .875em;
+}
+thead tr {
+    background: #333;
+    color: #fff;
+}
 /********************** HEADER ****************************/
 body{
     color: #666;
@@ -117,11 +129,11 @@ nav{
 }
 .acciones #opciones > a{
     color: #666;
+    cursor: pointer;
     display: inline-block;
     font-size: .75em;
     margin-right: .833em;
     overflow: hidden;
-    cursor: pointer;
 }
 .acciones #opciones a:last-child{
     margin-right: 0;
@@ -147,30 +159,13 @@ nav{
     font-weight: bold;
     text-align: center;
 }
-table.container_grid{
-    border: 1px solid #d5d5d5;
-    margin: .833em 0 0 0;
-    border-collapse:separate;
-    border-spacing: .33em;
-    font-size:  .75em;
-    width: 100%;
-}
-tr.header_grid td{
-    color: #fff;
+.table th{
+    border-right: 1px solid #fff;
     text-align: center;
-    background-color: #2a2a2a;
-    padding:.5em;
 }
-tr.content_grid td{
-    color: #666;
+.table td.td-center {
+    text-align: center;
 }
-#gridResult{
-    width: 100%;
-    clear: both;
-}
-/*#divIngresoForm{
-    display: none;
-}*/
 /********************FIN MAIN *****************************/
 /******************** FOOTER ******************************/
 footer{
@@ -210,6 +205,9 @@ div[id$="Failed"]{
 }
 
 /* PAGINACION */
+.pagination {
+    margin: 0 0 1em 0;
+}
 #pagination-digg li, #pagination li{
     border:0; margin:0; padding:0;
     font-size:.6875em;
@@ -251,3 +249,31 @@ div[id$="Failed"]{
     border:solid 1px #222222
 }
 /*************************** ESTILOS PERSONALIZADOS *******************************/
+.extra-table, .panel-search {
+    background: #F5F5F5;
+    display: block;
+    font-size: .75em;
+    margin-bottom: 1em;
+    padding: 1em 0;
+}
+.panel-search {
+    display: none;
+}
+.panel-search form {
+    margin: 0;
+    padding: 0 1em;
+}
+.extra-table ul {
+    margin-left: 0;
+}
+.extra-table ul > li{
+    display: inline-block;
+    line-height: normal;
+    padding: 0 1em;
+}
+.extra-table li select, .extra-table li input {
+    margin: 0;
+}
+.extra-table li label {
+    display: inline;
+}

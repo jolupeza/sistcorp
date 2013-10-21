@@ -121,33 +121,57 @@
 
      /**
      * Método para obtener listado de Permisos pero con limit definido
+     * @param   Array   $query_array    Array con los parámetros de búsqueda
      * @param   String  $cuantos    Número de permisos a listar
      * @param   String  $inicio     Desde donde empieza a listar
+     * @param   String  $sort_by    Indicamos con que campo vamos a ordenar
+     * @param   String  $sort_order Indicamos si ordenamos descendente o ascendentemente
      * @return  Array
      */
-    function getAcciones($query_array, $cuantos, $inicio)
+    function getAcciones($query_array, $cuantos, $inicio, $sort_by, $sort_order)
     {
-        $this->db->select('ID_ACCION, Accion, Activo, ID_OPCION, AccionKey');
-        $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
-        $this->db->where($where);
-        if (count($query_array) > 0) {
-            if (strlen($query_array['Accion'])) {
-                $this->db->like('Accion', $query_array['Accion']);
-            }
-        }
-        $this->db->order_by("Accion", "asc");
-        $result['rows'] = $this->db->get('tbl_accion', $cuantos, $inicio)->result();
+        $sort_order = ($sort_order == 'desc') ? 'desc' : 'asc';
+        $sort_columns = array('ID_ACCION', 'Accion', 'Opcion', 'AccionKey');
+        $sort_by = (in_array($sort_by, $sort_columns)) ? $sort_by : 'Accion';
 
-        $this->db->select('ID_ACCION');
-        $where = array('ID_EMPRESA' => $this->session->userdata('empresa'));
+        $this->db->select('ID_ACCION, Accion, a.Activo, Opcion, AccionKey');
+        $this->db->from('tbl_accion as a');
+        $this->db->join('tbl_opciones as o', 'a.ID_OPCION = o.ID_OPCION');
+        $where = array('a.ID_EMPRESA' => $this->session->userdata('empresa'));
         $this->db->where($where);
         if (count($query_array) > 0) {
             if (strlen($query_array['Accion'])) {
                 $this->db->like('Accion', $query_array['Accion']);
             }
+            if (strlen($query_array['Opcion'])) {
+                $this->db->or_like('o.Opcion', $query_array['Opcion']);
+            }
+            if (strlen($query_array['Key'])) {
+                $this->db->or_like('AccionKey', $query_array['Key']);
+            }
         }
-        $tmp = $this->db->get('tbl_accion');
-        $result['num_rows'] = $tmp->num_rows();
+        $this->db->limit($cuantos, $inicio);
+        $this->db->order_by($sort_by, $sort_order);
+        $result['rows'] = $this->db->get()->result();
+
+        $this->db->select('COUNT(*) as count', FALSE);
+        $this->db->from('tbl_accion as a');
+        $this->db->join('tbl_opciones as o', 'a.ID_OPCION = o.ID_OPCION');
+        $where = array('a.ID_EMPRESA' => $this->session->userdata('empresa'));
+        $this->db->where($where);
+        if (count($query_array) > 0) {
+            if (strlen($query_array['Accion'])) {
+                $this->db->like('Accion', $query_array['Accion']);
+            }
+            if (strlen($query_array['Opcion'])) {
+                $this->db->or_like('Opcion', $query_array['Opcion']);
+            }
+            if (strlen($query_array['Key'])) {
+                $this->db->or_like('AccionKey', $query_array['Key']);
+            }
+        }
+        $tmp = $this->db->get()->result();
+        $result['num_rows'] = $tmp[0]->count;
 
         return $result;
     }

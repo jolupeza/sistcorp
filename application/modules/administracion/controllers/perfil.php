@@ -17,6 +17,11 @@ class Perfil extends MX_Controller
         $this->load->library('pagination');
     }
 
+    function _example_output($output = null)
+    {
+        $this->load->view('themes/admin/template.php', $output);
+    }
+
     /**
      * Nos cargará la vista por defecto del controlador perfil
      */
@@ -28,34 +33,43 @@ class Perfil extends MX_Controller
                 redirect('/dashboard/');
             }
 
+            $this->load->library('Grocery_CRUD');
+
+            $crud = new Grocery_CRUD();
+            $crud->set_table('tbl_perfil');
+            $output = $crud->render();
+            $data['perfil'] = $output;
+            //$this->_example_output($output);
+            //exit;
+
             $limit = 10;
             $mod = $this->Modulos_Model->getModulos();
             if (is_array($mod)) {
                 $data['modulos'] = $mod;
             }
 
-            $query_array = array();
+            /*$query_array = array();
             if ($query_id > 0) {
                 $this->input->load_query($query_id);
                 $query_array = array(
                     'Perfil' => $this->input->get('Perfil')
                 );
-            }
+            }*/
 
-            $results = $this->Perfil_Model->getPerfiles($query_array, $limit, $this->uri->segment(5));
+            //$results = $this->Perfil_Model->getPerfiles($query_array, $limit, $this->uri->segment(5));
 
-            $data['perfil'] = $results['rows'];
-            $data['query_id'] = $query_id;
-            $data['num_rows'] = $results['num_rows'];
+            //$data['perfil'] = $results['rows'];
+            //$data['query_id'] = $query_id;
+            //$data['num_rows'] = $results['num_rows'];
 
-            if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
+            /*if (is_numeric($results['num_rows']) && $results['num_rows'] > 0) {
                 $config['base_url'] = base_url() . 'administracion/perfil/index/' . $query_id;
                 $config['total_rows'] = $results['num_rows'];
                 $config['per_page'] = '10';
                 $config['uri_segment'] = '5';
                 $this->pagination->initialize($config);
                 $data['pag_links'] = $this->pagination->create_links();
-            }
+            }*/
             $this->load->helper(array('funciones_helper'));
             $data['active'] = 'Administración'; // Hacemos que se muestre activo el menu Administracion
             $data['cssLoad'] = array('jquery.alerts');
@@ -63,7 +77,7 @@ class Perfil extends MX_Controller
             $data['title'] = 'SISTCORP - Administraci&oacute;n de Perfiles';
             $data['subtitle'] = 'Administraci&oacute;n de Perfiles';
             $data['main_content'] = 'perfil';
-            $this->load->view('includes/aplication/template', $data);
+            $this->load->view('themes/admin/template.php', $data);
         }
     }
 

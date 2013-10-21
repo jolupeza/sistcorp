@@ -40,10 +40,46 @@ $(document).on("ready", function() {
         }, 'json');
         return false;
     });
-    
+
     $("#btnEditAceptar").on("click", function() {
         if (rptaValidation == 0) {
             $("form#frmEditPermiso").submit();
         }
+    });
+
+    $("#slRegistro").on("change", function(){
+        var $registro = $(this).val();
+        var $sortBy = $(this).data('sortby');
+        var $sortOrder = $(this).data('sortorder');
+        var $search = $(this).data('search');
+        window.location = _root_ + 'administracion/acciones/index/' + $search + '/' + $sortBy + '/' + $sortOrder + '/' + $registro;
+    });
+
+    $("#btnGo").on("click", function(ev){
+        ev.preventDefault();
+        var $txtPage = $('#txtPage');
+        var $page = $txtPage.val();
+        var $registro = $("#slRegistro").val();
+        var $total = $txtPage.data('total');
+        var $numPage = Math.ceil($total / $registro);
+        var $search = $txtPage.data('search');
+        var $sortBy = $txtPage.data('sortby');
+        var $sortOrder = $txtPage.data('sortorder');
+        if ($page <= $numPage) {
+            $page = ($page - 1) * $registro;
+            if ($page == 0) {
+                window.location = _root_ + 'administracion/acciones/index/' + $search + '/' + $sortBy + '/' + $sortOrder + '/' + $registro;
+            } else {
+                window.location = _root_ + 'administracion/acciones/index/' + $search + '/' + $sortBy + '/' + $sortOrder + '/' + $registro + '/' + $page;
+            }
+        } else {
+            jAlert('¡Debes seleccionar una página entre 1 y ' + $numPage +  ' !');
+            $txtPage.val('').focus();
+        }
+    });
+
+    $('.displaySearch').on('click', function(ev){
+        ev.preventDefault();
+        $('.panel-search').slideToggle('slow').find('input[type="text"]').first().focus();
     });
 });

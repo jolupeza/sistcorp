@@ -83,7 +83,7 @@ class Login extends CI_Controller
     /**
      * Verificar que se haya seleccionado la empresa
      * @access      private
-     * @param      int          $value      El valor de empresa seleccionada
+     * @param       int          $value      El valor de empresa seleccionada
      * @return      bool
      */
     function _verifySelect($value)
